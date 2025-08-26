@@ -1,65 +1,26 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useKV } from "@github/spark/hooks";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Terminal,
-  Copy,
-  Star,
-  StarHalf,
-  User,
-  Heart,
-  Palette,
-  Globe,
-  Code,
-} from "@phosphor-icons/react";
-import {
-  gitCommands,
   parseGitCommand,
+  gitCommands,
   getCommandSuggestions,
-  type GitCommand,
 } from "@/lib/git-commands";
 import {
-  themes,
-  applyTheme,
   getCurrentTheme,
   setCurrentTheme,
+  themes,
+  applyTheme,
 } from "@/lib/themes";
 import { toast, Toaster } from "sonner";
-
-interface TerminalEntry {
-  id: string;
-  type: "command" | "output" | "error";
-  content: string;
-  timestamp: number;
-}
-
-interface Review {
-  id: string;
-  name: string;
-  rating: number;
-  comment: string;
-  timestamp: number;
-}
-
-interface Testimonial {
-  id: string;
-  name: string;
-  role: string;
-  rating: number;
-  comment: string;
-  avatar: string;
-}
+import { AppHeader } from "./components/AppHeader";
+import { TerminalSection } from "./components/TerminalSection";
+import { CommandDetails } from "./components/CommandDetails";
+import { HelpTips } from "./components/HelpTips";
+import { Testimonials } from "./components/Testimonials";
+import { ReviewForm } from "./components/ReviewForm";
+import { ReviewList } from "./components/ReviewList";
+import { AppFooter } from "./components/AppFooter";
+import { TerminalEntry, Review, Testimonial } from "./types";
 
 function App() {
   const [input, setInput] = useState("");
@@ -69,7 +30,7 @@ function App() {
     []
   );
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [currentCommand, setCurrentCommand] = useState<GitCommand | null>(null);
+  const [currentCommand, setCurrentCommand] = useState<any>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [currentThemeId, setCurrentThemeId] = useState("matrix");
 
@@ -81,7 +42,7 @@ function App() {
       rating: 5,
       comment:
         "This is exactly what I needed to finally understand Git! The terminal interface makes it feel like real practice.",
-      timestamp: Date.now() - 86400000 * 2, // 2 days ago
+      timestamp: Date.now() - 86400000 * 2,
     },
     {
       id: "demo-2",
@@ -89,12 +50,9 @@ function App() {
       rating: 4,
       comment:
         "Great tool for learning. Would love to see more advanced Git workflows covered in the future.",
-      timestamp: Date.now() - 86400000 * 5, // 5 days ago
+      timestamp: Date.now() - 86400000 * 5,
     },
   ]);
-  const [reviewName, setReviewName] = useState("");
-  const [reviewRating, setReviewRating] = useState(5);
-  const [reviewComment, setReviewComment] = useState("");
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -144,22 +102,10 @@ function App() {
     })),
   ];
 
+  // Theme management
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [entries]);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  // Initialize theme from localStorage and apply theme on mount and when theme changes
-  useEffect(() => {
-    // Initialize theme from localStorage on mount
     const savedTheme = getCurrentTheme();
     setCurrentThemeId(savedTheme);
-
     const theme = themes.find((t) => t.id === savedTheme) || themes[0];
     applyTheme(theme);
   }, []);
@@ -178,6 +124,7 @@ function App() {
     }
   };
 
+  // Terminal functionality
   const addEntry = (type: TerminalEntry["type"], content: string) => {
     const newEntry: TerminalEntry = {
       id: Date.now().toString(),
@@ -211,7 +158,7 @@ function App() {
 
       if (gitCmd.examples.length > 0) {
         addEntry("output", "Examples:");
-        gitCmd.examples.forEach((example) => {
+        gitCmd.examples.forEach((example: string) => {
           addEntry("output", `  ${example}`);
         });
       }
@@ -221,7 +168,6 @@ function App() {
       addEntry("error", "Try one of these common Git commands:");
       addEntry("error", "  git init, git add, git commit, git push, git pull");
 
-      // Show suggestions for partial matches
       const suggestions = getCommandSuggestions(input);
       if (suggestions.length > 0) {
         addEntry("error", "Did you mean:");
@@ -271,97 +217,25 @@ function App() {
     inputRef.current?.focus();
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-  };
-
   const clearTerminal = () => {
     setEntries([]);
     setCurrentCommand(null);
   };
 
-  const handleReviewSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!reviewName.trim() || !reviewComment.trim()) {
-      toast.error("Please fill in all fields");
-      return;
-    }
-
-    const newReview: Review = {
-      id: Date.now().toString(),
-      name: reviewName.trim(),
-      rating: reviewRating,
-      comment: reviewComment.trim(),
-      timestamp: Date.now(),
-    };
-
-    setReviews((currentReviews) => [newReview, ...(currentReviews || [])]);
-    setReviewName("");
-    setReviewComment("");
-    setReviewRating(5);
+  const handleReviewSubmit = (review: Review) => {
+    setReviews((currentReviews) => [review, ...(currentReviews || [])]);
     setShowReviewForm(false);
     toast.success("Thank you for your review!");
   };
 
-  const renderStars = (
-    rating: number,
-    interactive = false,
-    onClick?: (rating: number) => void
-  ) => {
-    const stars: React.ReactNode[] = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-
-    for (let i = 1; i <= 5; i++) {
-      if (i <= fullStars) {
-        stars.push(
-          <Star
-            key={i}
-            size={16}
-            weight="fill"
-            className={`${
-              interactive ? "cursor-pointer hover:text-accent" : ""
-            } text-accent`}
-            onClick={interactive ? () => onClick?.(i) : undefined}
-          />
-        );
-      } else if (i === fullStars + 1 && hasHalfStar) {
-        stars.push(
-          <StarHalf
-            key={i}
-            size={16}
-            weight="fill"
-            className={`${
-              interactive ? "cursor-pointer hover:text-accent" : ""
-            } text-accent`}
-            onClick={interactive ? () => onClick?.(i) : undefined}
-          />
-        );
-      } else {
-        stars.push(
-          <Star
-            key={i}
-            size={16}
-            weight="regular"
-            className={`${
-              interactive ? "cursor-pointer hover:text-accent" : ""
-            } text-muted-foreground`}
-            onClick={interactive ? () => onClick?.(i) : undefined}
-          />
-        );
-      }
-    }
-    return stars;
-  };
-
+  // Update suggestions
   useEffect(() => {
     let newSuggestions = getCommandSuggestions(input);
 
-    // Add related commands if we have a current command and no input
     if (
       !input.trim() &&
       currentCommand &&
-      currentCommand.relatedCommands.length > 0
+      currentCommand.relatedCommands?.length > 0
     ) {
       newSuggestions = [...currentCommand.relatedCommands, ...newSuggestions];
     }
@@ -372,264 +246,33 @@ function App() {
   return (
     <div className="min-h-screen bg-background p-2 sm:p-4">
       <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4">
-        {/* Header */}
-        <div className="flex items-center gap-2 sm:gap-3 text-foreground">
-          <Terminal size={20} weight="bold" className="sm:hidden" />
-          <Terminal size={24} weight="bold" className="hidden sm:block" />
-          <h1 className="text-lg sm:text-xl font-bold">Git Command Terminal</h1>
-          <div className="ml-auto flex gap-1 sm:gap-2 items-center">
-            {/* Theme Selector */}
-            <div className="flex items-center gap-1 sm:gap-2">
-              <Palette size={14} className="text-muted-foreground sm:hidden" />
-              <Palette
-                size={16}
-                className="text-muted-foreground hidden sm:block"
-              />
-              <Select value={currentThemeId} onValueChange={handleThemeChange}>
-                <SelectTrigger className="w-28 sm:w-40 h-7 sm:h-8 text-xs theme-selector">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {themes.map((theme) => (
-                    <SelectItem
-                      key={theme.id}
-                      value={theme.id}
-                      className="text-xs">
-                      {theme.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={clearTerminal}
-              className="text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground">
-              Clear
-            </Button>
-          </div>
-        </div>
+        <AppHeader
+          currentThemeId={currentThemeId}
+          onThemeChange={handleThemeChange}
+          onClearTerminal={clearTerminal}
+        />
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-          {/* Terminal */}
-          <div className="xl:col-span-2">
-            <Card className="bg-card border border-border">
-              <div className="p-3 sm:p-4 space-y-4">
-                {/* Terminal Header */}
-                <div className="flex items-center gap-2 text-muted-foreground text-xs sm:text-sm">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-destructive"></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-accent"></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-primary"></div>
-                  </div>
-                  <span className="hidden sm:inline">
-                    Git Learning Terminal
-                  </span>
-                  <span className="sm:hidden">Terminal</span>
-                </div>
+          <TerminalSection
+            entries={entries}
+            input={input}
+            suggestions={suggestions}
+            inputRef={inputRef}
+            scrollRef={scrollRef}
+            onInputChange={setInput}
+            onSubmit={handleSubmit}
+            onKeyDown={handleKeyDown}
+            onSuggestionClick={handleSuggestionClick}
+          />
 
-                {/* Terminal Output */}
-                <ScrollArea className="h-64 sm:h-80 lg:h-96">
-                  <div
-                    ref={scrollRef}
-                    className="space-y-1 text-xs sm:text-sm font-mono">
-                    {(!entries || entries.length === 0) && (
-                      <div className="text-muted-foreground">
-                        <p>Welcome to Git Command Terminal!</p>
-                        <p className="hidden sm:block">
-                          Type a git command to learn how to use it.
-                        </p>
-                        <p className="sm:hidden">Type git commands to learn</p>
-                        <p>Example: git init</p>
-                      </div>
-                    )}
-
-                    {entries &&
-                      entries.map((entry) => (
-                        <div
-                          key={entry.id}
-                          className={`break-words ${
-                            entry.type === "command"
-                              ? "text-primary font-medium"
-                              : entry.type === "error"
-                              ? "text-destructive"
-                              : "text-card-foreground"
-                          }`}>
-                          {entry.content}
-                        </div>
-                      ))}
-                  </div>
-                </ScrollArea>
-
-                {/* Command Input */}
-                <form
-                  onSubmit={handleSubmit}
-                  className="flex items-center gap-1 sm:gap-2">
-                  <span className="text-primary font-mono text-sm">$</span>
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="flex-1 bg-transparent border-none outline-none text-foreground font-mono text-xs sm:text-sm placeholder:text-muted-foreground"
-                    placeholder="Enter git command..."
-                    autoComplete="off"
-                  />
-                  <span className="text-primary font-mono terminal-cursor text-sm">
-                    |
-                  </span>
-                </form>
-
-                {/* Live Suggestions */}
-                {suggestions.length > 0 && (
-                  <div className="text-xs text-muted-foreground">
-                    <div className="mb-1">
-                      <span>
-                        {input.trim() ? "Suggestions" : "Related Commands"}:{" "}
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {suggestions.slice(0, 5).map((suggestion) => (
-                        <button
-                          key={suggestion}
-                          onClick={() => handleSuggestionClick(suggestion)}
-                          className="text-accent hover:text-accent-foreground underline suggestion-link bg-muted/30 px-2 py-1 rounded text-xs">
-                          {suggestion}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
-
-          {/* Sidebar */}
           <div className="space-y-4">
-            {/* Current Command Details */}
-            {currentCommand && (
-              <Card className="bg-card border border-border p-3 sm:p-4">
-                <h3 className="font-medium text-foreground mb-3 flex items-center gap-2 text-sm">
-                  <Terminal size={14} className="sm:hidden" />
-                  <Terminal size={16} className="hidden sm:block" />
-                  <span className="hidden sm:inline">Command Details</span>
-                  <span className="sm:hidden">Details</span>
-                </h3>
-
-                <div className="space-y-3 text-xs sm:text-sm">
-                  <div>
-                    <div className="text-primary font-mono font-medium mb-1 break-words">
-                      {currentCommand.command}
-                    </div>
-                    <div className="text-card-foreground leading-relaxed">
-                      {currentCommand.description}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="text-muted-foreground font-medium mb-1">
-                      Usage:
-                    </div>
-                    <code className="text-xs bg-muted text-muted-foreground p-2 rounded block break-words">
-                      {currentCommand.usage}
-                    </code>
-                  </div>
-
-                  {currentCommand.examples.length > 0 && (
-                    <div>
-                      <div className="text-muted-foreground font-medium mb-2">
-                        Examples:
-                      </div>
-                      <div className="space-y-1">
-                        {currentCommand.examples.map((example, index) => (
-                          <div key={index} className="flex items-start gap-2">
-                            <code className="text-xs bg-muted text-muted-foreground p-1 rounded flex-1 break-words">
-                              {example}
-                            </code>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => copyToClipboard(example)}
-                              className="h-6 w-6 p-0 copy-button flex-shrink-0">
-                              <Copy size={10} className="sm:hidden" />
-                              <Copy size={12} className="hidden sm:block" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Card>
-            )}
-
-            {/* Help */}
-            <Card className="bg-card border border-border p-3 sm:p-4">
-              <h3 className="font-medium text-foreground mb-3 text-sm">Tips</h3>
-              <div className="text-xs text-muted-foreground space-y-2">
-                <p>• Use ↑/↓ arrows for history</p>
-                <p className="hidden sm:block">
-                  • Press Tab for command autocomplete
-                </p>
-                <p className="sm:hidden">• Tab for autocomplete</p>
-                <p className="hidden sm:block">
-                  • Click related commands to explore
-                </p>
-                <p className="sm:hidden">• Click suggestions</p>
-                <p className="hidden sm:block">
-                  • Your history is saved between sessions
-                </p>
-                <p className="sm:hidden">• History is saved</p>
-              </div>
-            </Card>
+            {currentCommand && <CommandDetails command={currentCommand} />}
+            <HelpTips />
           </div>
         </div>
 
-        {/* Testimonials Section */}
-        <div className="mt-8 sm:mt-12">
-          <div className="text-center mb-6 sm:mb-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-              What Users Say
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground">
-              Hear from developers who improved their Git skills
-            </p>
-          </div>
+        <Testimonials testimonials={allTestimonials} />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-            {allTestimonials.map((testimonial) => (
-              <Card
-                key={testimonial.id}
-                className="bg-card border border-border p-4 sm:p-6">
-                <div className="flex items-center gap-3 mb-3 sm:mb-4">
-                  <div className="text-xl sm:text-2xl">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground text-sm sm:text-base">
-                      {testimonial.name}
-                    </div>
-                    <div className="text-xs sm:text-sm text-muted-foreground">
-                      {testimonial.role}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1 mb-3">
-                  {renderStars(testimonial.rating)}
-                </div>
-
-                <p className="text-xs sm:text-sm text-card-foreground leading-relaxed">
-                  "{testimonial.comment}"
-                </p>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Reviews Section */}
         <div className="mt-8 sm:mt-12">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
             <div>
@@ -640,148 +283,24 @@ function App() {
                 Share your experience with the community
               </p>
             </div>
-            <Button
+            <button
               onClick={() => setShowReviewForm(!showReviewForm)}
-              className="flex items-center gap-2 text-sm px-3 py-2 self-start sm:self-auto">
-              <Heart size={14} className="sm:hidden" />
-              <Heart size={16} className="hidden sm:block" />
-              <span className="hidden sm:inline">Leave Review</span>
-              <span className="sm:hidden">Review</span>
-            </Button>
+              className="flex items-center gap-2 text-sm px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+              Leave Review
+            </button>
           </div>
 
-          {/* Review Form */}
           {showReviewForm && (
-            <Card className="bg-card border border-border p-4 sm:p-6 mb-4 sm:mb-6">
-              <h3 className="font-medium text-foreground mb-3 sm:mb-4 text-sm sm:text-base">
-                Share Your Review
-              </h3>
-              <form
-                onSubmit={handleReviewSubmit}
-                className="space-y-3 sm:space-y-4">
-                <div>
-                  <label className="text-xs sm:text-sm font-medium text-foreground mb-2 block">
-                    Your Name
-                  </label>
-                  <Input
-                    value={reviewName}
-                    onChange={(e) => setReviewName(e.target.value)}
-                    placeholder="Enter your name"
-                    className="bg-background text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs sm:text-sm font-medium text-foreground mb-2 block">
-                    Rating
-                  </label>
-                  <div className="flex items-center gap-1">
-                    {renderStars(reviewRating, true, setReviewRating)}
-                    <span className="ml-2 text-xs sm:text-sm text-muted-foreground">
-                      {reviewRating} star{reviewRating !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-xs sm:text-sm font-medium text-foreground mb-2 block">
-                    Your Review
-                  </label>
-                  <Textarea
-                    value={reviewComment}
-                    onChange={(e) => setReviewComment(e.target.value)}
-                    placeholder="Tell us about your experience with Git Command Terminal..."
-                    className="bg-background min-h-[80px] sm:min-h-[100px] text-sm"
-                  />
-                </div>
-
-                <div className="flex gap-2">
-                  <Button type="submit" className="text-sm px-3 py-2">
-                    Submit Review
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setShowReviewForm(false)}
-                    className="text-sm px-3 py-2">
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </Card>
+            <ReviewForm
+              onSubmit={handleReviewSubmit}
+              onCancel={() => setShowReviewForm(false)}
+            />
           )}
 
-          {/* Display Reviews */}
-          <div className="space-y-3 sm:space-y-4">
-            {(reviews || []).map((review) => (
-              <Card
-                key={review.id}
-                className="bg-card border border-border p-4 sm:p-6">
-                <div className="flex items-start justify-between mb-3 gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
-                      <User size={14} className="text-primary sm:hidden" />
-                      <User
-                        size={16}
-                        className="text-primary hidden sm:block"
-                      />
-                    </div>
-                    <div>
-                      <div className="font-medium text-foreground text-sm sm:text-base">
-                        {review.name}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {renderStars(review.rating)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-xs text-muted-foreground flex-shrink-0">
-                    {new Date(review.timestamp).toLocaleDateString()}
-                  </div>
-                </div>
-
-                <p className="text-xs sm:text-sm text-card-foreground leading-relaxed">
-                  {review.comment}
-                </p>
-              </Card>
-            ))}
-          </div>
+          <ReviewList reviews={reviews || []} />
         </div>
 
-        {/* Footer */}
-        <footer className="mt-12 sm:mt-20 border-t border-border pt-6 sm:pt-8 pb-8 sm:pb-12">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                <Code size={14} className="text-primary sm:hidden" />
-                <Code size={16} className="text-primary hidden sm:block" />
-              </div>
-              <div className="text-center md:text-left">
-                <div className="font-medium text-foreground text-sm sm:text-base">
-                  Built by Dan
-                </div>
-                <div className="text-xs sm:text-sm text-muted-foreground">
-                  Passionate about making Git accessible to everyone
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
-              <a
-                href="https://dantech.academy"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors">
-                <Globe size={14} className="sm:hidden" />
-                <Globe size={16} className="hidden sm:block" />
-                Visit My Blog
-              </a>
-              <div className="text-xs text-muted-foreground">
-                © 2024 Git Command Terminal
-              </div>
-            </div>
-          </div>
-        </footer>
+        <AppFooter />
       </div>
       <Toaster
         theme="dark"
