@@ -88,6 +88,24 @@ button, .cursor-pointer, [role="button"] {
   cursor: pointer;
 }
 
+/* Mobile-first responsive design improvements */
+@media (max-width: 640px) {
+  .terminal-cursor {
+    animation: none; /* Reduce animation on mobile for better performance */
+  }
+  
+  /* Better touch targets for mobile */
+  button, .cursor-pointer, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Improved scrolling on mobile */
+.scroll-area {
+  -webkit-overflow-scrolling: touch;
+}
+
 a, a:hover {
   cursor: alias;
 }
