@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
-import { Terminal, Copy, Star, StarHalf, User, Heart } from '@phosphor-icons/react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Terminal, Copy, Star, StarHalf, User, Heart, Palette } from '@phosphor-icons/react'
 import { gitCommands, parseGitCommand, getCommandSuggestions, type GitCommand } from '@/lib/git-commands'
+import { themes, applyTheme, getCurrentTheme, setCurrentTheme } from '@/lib/themes'
 import { toast, Toaster } from 'sonner'
 
 interface TerminalEntry {
@@ -40,6 +42,7 @@ function App() {
   const [historyIndex, setHistoryIndex] = useState(-1)
   const [currentCommand, setCurrentCommand] = useState<GitCommand | null>(null)
   const [suggestions, setSuggestions] = useState<string[]>([])
+  const [currentThemeId, setCurrentThemeId] = useState('matrix')
   
   // Review state
   const [reviews, setReviews] = useKV<Review[]>('user-reviews', [
@@ -116,6 +119,30 @@ function App() {
   useEffect(() => {
     inputRef.current?.focus()
   }, [])
+
+  // Initialize theme from localStorage and apply theme on mount and when theme changes
+  useEffect(() => {
+    // Initialize theme from localStorage on mount
+    const savedTheme = getCurrentTheme()
+    setCurrentThemeId(savedTheme)
+    
+    const theme = themes.find(t => t.id === savedTheme) || themes[0]
+    applyTheme(theme)
+  }, [])
+
+  useEffect(() => {
+    const theme = themes.find(t => t.id === currentThemeId) || themes[0]
+    applyTheme(theme)
+  }, [currentThemeId])
+
+  const handleThemeChange = (themeId: string) => {
+    setCurrentThemeId(themeId)
+    setCurrentTheme(themeId)
+    const theme = themes.find(t => t.id === themeId)
+    if (theme) {
+      toast.success(`Switched to ${theme.name} theme`)
+    }
+  }
 
   const addEntry = (type: TerminalEntry['type'], content: string) => {
     const newEntry: TerminalEntry = {
@@ -298,7 +325,23 @@ function App() {
         <div className="flex items-center gap-3 text-foreground">
           <Terminal size={24} weight="bold" />
           <h1 className="text-xl font-bold">Git Command Terminal</h1>
-          <div className="ml-auto flex gap-2">
+          <div className="ml-auto flex gap-2 items-center">
+            {/* Theme Selector */}
+            <div className="flex items-center gap-2">
+              <Palette size={16} className="text-muted-foreground" />
+              <Select value={currentThemeId} onValueChange={handleThemeChange}>
+                <SelectTrigger className="w-40 h-8 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {themes.map((theme) => (
+                    <SelectItem key={theme.id} value={theme.id} className="text-xs">
+                      {theme.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <Button 
               variant="outline" 
               size="sm" 

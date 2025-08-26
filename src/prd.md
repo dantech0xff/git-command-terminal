@@ -23,9 +23,14 @@
 - **Success Criteria**: Users can navigate command history and execute Git commands naturally
 
 ### Command Learning System
-- **Functionality**: Parse Git commands and provide comprehensive explanations, usage examples, and related commands
+- **Functionality**: Parse Git commands and provide comprehensive explanations, usage examples, and related commands with intelligent suggestions
 - **Purpose**: Immediate learning feedback that builds understanding
 - **Success Criteria**: Users understand command purpose and can apply knowledge
+
+### Theme Customization
+- **Functionality**: Multiple visual themes (Matrix Terminal, Oceanic Blue, Sunset Orange, Midnight Purple, Light Terminal, Neon Cyberpunk) with persistent user preference
+- **Purpose**: Personalization and accessibility for different visual preferences
+- **Success Criteria**: Users can switch themes seamlessly and preferences persist across sessions
 
 ### Community Testimonials
 - **Functionality**: Display curated positive testimonials from successful learners
@@ -46,8 +51,17 @@
 - **Simplicity Spectrum**: Clean interface focused on content over decoration
 
 ### Color Strategy
-- **Color Scheme Type**: Dark terminal theme with accent highlights
-- **Primary Color**: Terminal green (#7dd3fc - bright cyan) - represents success and terminal authenticity
+- **Color Scheme Type**: Multiple theme options supporting different visual preferences
+- **Default Theme**: Matrix Terminal - Dark terminal theme with green accents representing authenticity
+- **Theme Variety**: 
+  - Matrix Terminal: Classic green-on-black terminal aesthetic
+  - Oceanic Blue: Calming blue tones for extended learning sessions  
+  - Sunset Orange: Warm, energetic orange palette
+  - Midnight Purple: Deep purple for late-night coding sessions
+  - Light Terminal: High contrast light theme for bright environments
+  - Neon Cyberpunk: Vibrant pink/cyan for modern aesthetic
+- **Color Psychology**: Each theme supports different moods and environments while maintaining readability
+- **Color Accessibility**: All themes maintain WCAG AA contrast ratios
 - **Secondary Colors**: Dark backgrounds (#1e1e2e) for terminal feel
 - **Accent Color**: Warm amber (#f59e0b) for ratings and positive feedback
 - **Color Psychology**: Dark theme reduces eye strain during coding sessions, green suggests growth and success
