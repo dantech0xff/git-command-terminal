@@ -676,4 +676,20 @@ function App() {
   )
 }
 
+export default App      </div>
+      <Toaster 
+        theme="dark"
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: 'var(--popover)',
+            color: 'var(--popover-foreground)',
+            border: '1px solid var(--border)',
+          },
+        }}
+      />
+    </div>
+  )
+}
+
 export default App
