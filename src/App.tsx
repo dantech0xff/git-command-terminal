@@ -134,8 +134,15 @@ function App() {
   }
 
   useEffect(() => {
-    setSuggestions(getCommandSuggestions(input))
-  }, [input])
+    let newSuggestions = getCommandSuggestions(input)
+    
+    // Add related commands if we have a current command and no input
+    if (!input.trim() && currentCommand && currentCommand.relatedCommands.length > 0) {
+      newSuggestions = [...currentCommand.relatedCommands, ...newSuggestions]
+    }
+    
+    setSuggestions(newSuggestions)
+  }, [input, currentCommand])
 
   return (
     <div className="min-h-screen bg-background p-4">
@@ -216,10 +223,10 @@ function App() {
                 </form>
 
                 {/* Live Suggestions */}
-                {input.trim() && suggestions.length > 0 && (
+                {suggestions.length > 0 && (
                   <div className="text-xs text-muted-foreground">
-                    <span>Suggestions: </span>
-                    {suggestions.slice(0, 3).map((suggestion, index) => (
+                    <span>{input.trim() ? 'Suggestions' : 'Related Commands'}: </span>
+                    {suggestions.slice(0, 5).map((suggestion, index) => (
                       <span key={suggestion}>
                         <button
                           onClick={() => handleSuggestionClick(suggestion)}
@@ -227,7 +234,7 @@ function App() {
                         >
                           {suggestion}
                         </button>
-                        {index < Math.min(2, suggestions.length - 1) && ', '}
+                        {index < Math.min(4, suggestions.length - 1) && ', '}
                       </span>
                     ))}
                   </div>
@@ -308,24 +315,6 @@ function App() {
                 </div>
               </Card>
             )}
-
-            {/* Quick Commands */}
-            <Card className="bg-card border border-border p-4">
-              <h3 className="font-medium text-foreground mb-3">Quick Start</h3>
-              <div className="space-y-2">
-                {['git init', 'git status', 'git add', 'git commit', 'git push'].map((command) => (
-                  <Button
-                    key={command}
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSuggestionClick(command)}
-                    className="w-full justify-start text-xs font-mono h-8"
-                  >
-                    {command}
-                  </Button>
-                ))}
-              </div>
-            </Card>
 
             {/* Help */}
             <Card className="bg-card border border-border p-4">
