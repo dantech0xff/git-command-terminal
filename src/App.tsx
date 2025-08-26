@@ -346,7 +346,7 @@ function App() {
               variant="outline" 
               size="sm" 
               onClick={clearTerminal}
-              className="text-xs"
+              className="text-xs hover:text-foreground"
             >
               Clear
             </Button>
