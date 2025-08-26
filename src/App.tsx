@@ -20,7 +20,12 @@ import { Testimonials } from "./components/Testimonials";
 import { ReviewForm } from "./components/ReviewForm";
 import { ReviewList } from "./components/ReviewList";
 import { AppFooter } from "./components/AppFooter";
+import { LoadingState, ErrorState } from "./components/LoadingStates";
+import { NetworkStatus, useNetworkStatus } from "./components/NetworkStatus";
+import { NetworkDemo } from "./components/NetworkDemo";
 import { TerminalEntry, Review, Testimonial } from "./types";
+import { useReviews, useAllTestimonials } from "./hooks/useData";
+import { isLocalhost } from "./utils/environment";
 
 function App() {
   const [input, setInput] = useState("");
@@ -33,74 +38,31 @@ function App() {
   const [currentCommand, setCurrentCommand] = useState<any>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [currentThemeId, setCurrentThemeId] = useState("matrix");
-
-  // Review state
-  const [reviews, setReviews] = useKV<Review[]>("user-reviews", [
-    {
-      id: "demo-1",
-      name: "Jordan Smith",
-      rating: 5,
-      comment:
-        "This is exactly what I needed to finally understand Git! The terminal interface makes it feel like real practice.",
-      timestamp: Date.now() - 86400000 * 2,
-    },
-    {
-      id: "demo-2",
-      name: "Taylor Johnson",
-      rating: 4,
-      comment:
-        "Great tool for learning. Would love to see more advanced Git workflows covered in the future.",
-      timestamp: Date.now() - 86400000 * 5,
-    },
-  ]);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Base testimonials data
-  const baseTestimonials: Testimonial[] = [
-    {
-      id: "1",
-      name: "Sarah Chen",
-      role: "Junior Developer",
-      rating: 5,
-      comment:
-        "This terminal helped me learn Git commands so much faster! The interactive approach makes it easy to understand what each command does.",
-      avatar: "👩‍💻",
-    },
-    {
-      id: "2",
-      name: "Mike Rodriguez",
-      role: "CS Student",
-      rating: 5,
-      comment:
-        "Perfect for beginners! I went from being scared of Git to confidently using it in my projects. The command suggestions are brilliant.",
-      avatar: "👨‍🎓",
-    },
-    {
-      id: "3",
-      name: "Alex Kim",
-      role: "Bootcamp Graduate",
-      rating: 4,
-      comment:
-        "Great learning tool. The terminal interface feels authentic and the explanations are clear and concise.",
-      avatar: "🧑‍💻",
-    },
-  ];
+  // Use the new data hooks
+  const {
+    reviews,
+    loading: reviewsLoading,
+    error: reviewsError,
+    submitReview,
+    deleteReview,
+  } = useReviews();
 
-  // Combine testimonials with user reviews
-  const allTestimonials = [
-    ...baseTestimonials,
-    ...(reviews ?? []).map((review) => ({
-      id: review.id,
-      name: review.name,
-      role: "Community Member",
-      rating: review.rating,
-      comment: review.comment,
-      avatar: "👤",
-    })),
-  ];
+  const {
+    testimonials: allTestimonials,
+    loading: testimonialsLoading,
+    error: testimonialsError,
+  } = useAllTestimonials();
+
+  // Aggregate network status
+  const networkStatus = useNetworkStatus(
+    { loading: reviewsLoading, error: reviewsError },
+    { loading: testimonialsLoading, error: testimonialsError }
+  );
 
   // Theme management
   useEffect(() => {
@@ -222,10 +184,18 @@ function App() {
     setCurrentCommand(null);
   };
 
-  const handleReviewSubmit = (review: Review) => {
-    setReviews((currentReviews) => [review, ...(currentReviews || [])]);
-    setShowReviewForm(false);
-    toast.success("Thank you for your review!");
+  const handleReviewSubmit = async (review: Review) => {
+    try {
+      await submitReview({
+        name: review.name,
+        rating: review.rating,
+        comment: review.comment,
+      });
+      setShowReviewForm(false);
+    } catch (error) {
+      // Error is already handled in the hook
+      console.error("Failed to submit review:", error);
+    }
   };
 
   // Update suggestions
@@ -245,6 +215,14 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background p-2 sm:p-4">
+      {/* Network Status Indicator - only show in localhost mode */}
+      {isLocalhost() && (
+        <NetworkStatus
+          loading={networkStatus.loading}
+          error={networkStatus.error}
+        />
+      )}
+
       <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4">
         <AppHeader
           currentThemeId={currentThemeId}
@@ -271,7 +249,19 @@ function App() {
           </div>
         </div>
 
-        <Testimonials testimonials={allTestimonials} />
+        {testimonialsLoading ? (
+          <LoadingState
+            title="Loading testimonials..."
+            description="Fetching user testimonials and reviews"
+          />
+        ) : testimonialsError ? (
+          <ErrorState
+            title="Failed to load testimonials"
+            description={testimonialsError}
+          />
+        ) : (
+          <Testimonials testimonials={allTestimonials} />
+        )}
 
         <div className="mt-8 sm:mt-12">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
@@ -297,11 +287,27 @@ function App() {
             />
           )}
 
-          <ReviewList reviews={reviews || []} />
+          {reviewsLoading ? (
+            <LoadingState
+              title="Loading reviews..."
+              description="Fetching user reviews"
+            />
+          ) : reviewsError ? (
+            <ErrorState
+              title="Failed to load reviews"
+              description={reviewsError}
+            />
+          ) : (
+            <ReviewList reviews={reviews || []} />
+          )}
         </div>
 
         <AppFooter />
       </div>
+
+      {/* Development Network Demo - only show in localhost mode */}
+      {isLocalhost() && <NetworkDemo />}
+
       <Toaster
         theme="dark"
         position="bottom-right"

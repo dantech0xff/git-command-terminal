@@ -1,0 +1,209 @@
+import { Review, Testimonial } from "@/types";
+import {
+  getNetworkDelay,
+  shouldSimulateError,
+  logNetworkOperation,
+  networkConfig,
+} from "@/config/network";
+
+// Mock data that was previously in App.tsx
+const mockReviews: Review[] = [
+  {
+    id: "demo-1",
+    name: "Jordan Smith",
+    rating: 5,
+    comment:
+      "This is exactly what I needed to finally understand Git! The terminal interface makes it feel like real practice.",
+    timestamp: Date.now() - 86400000 * 2, // 2 days ago
+  },
+  {
+    id: "demo-2",
+    name: "Taylor Johnson",
+    rating: 4,
+    comment:
+      "Great tool for learning. Would love to see more advanced Git workflows covered in the future.",
+    timestamp: Date.now() - 86400000 * 5, // 5 days ago
+  },
+];
+
+const mockTestimonials: Testimonial[] = [
+  {
+    id: "1",
+    name: "Sarah Chen",
+    role: "Junior Developer",
+    rating: 5,
+    comment:
+      "This terminal helped me learn Git commands so much faster! The interactive approach makes it easy to understand what each command does.",
+    avatar: "👩‍💻",
+  },
+  {
+    id: "2",
+    name: "Mike Rodriguez",
+    role: "CS Student",
+    rating: 5,
+    comment:
+      "Perfect for beginners! I went from being scared of Git to confidently using it in my projects. The command suggestions are brilliant.",
+    avatar: "👨‍🎓",
+  },
+  {
+    id: "3",
+    name: "Alex Kim",
+    role: "Bootcamp Graduate",
+    rating: 4,
+    comment:
+      "Great learning tool. The terminal interface feels authentic and the explanations are clear and concise.",
+    avatar: "🧑‍💻",
+  },
+];
+
+// Simulate network delay with configurable timing
+const simulateNetworkDelay = (operation: string = "default"): Promise<void> => {
+  const delay = getNetworkDelay();
+  return new Promise((resolve) => setTimeout(resolve, delay));
+};
+
+// Enhanced error simulation with specific operation context
+const checkForSimulatedError = (
+  operation: keyof typeof networkConfig.errorRates
+): void => {
+  if (shouldSimulateError(operation)) {
+    throw new Error(`Network error during ${operation}`);
+  }
+};
+
+// API functions that simulate network requests
+export const apiService = {
+  // Fetch initial reviews (simulates GET /api/reviews)
+  async fetchReviews(): Promise<Review[]> {
+    const startTime = Date.now();
+    let error: Error | undefined;
+
+    try {
+      await simulateNetworkDelay("fetchReviews");
+      checkForSimulatedError("fetchReviews");
+
+      const result = [...mockReviews];
+      logNetworkOperation("fetchReviews", Date.now() - startTime);
+      return result;
+    } catch (err) {
+      error = err instanceof Error ? err : new Error("Unknown error");
+      logNetworkOperation("fetchReviews", Date.now() - startTime, error);
+      throw error;
+    }
+  },
+
+  // Fetch testimonials (simulates GET /api/testimonials)
+  async fetchTestimonials(): Promise<Testimonial[]> {
+    const startTime = Date.now();
+    let error: Error | undefined;
+
+    try {
+      await simulateNetworkDelay("fetchTestimonials");
+      checkForSimulatedError("fetchTestimonials");
+
+      const result = [...mockTestimonials];
+      logNetworkOperation("fetchTestimonials", Date.now() - startTime);
+      return result;
+    } catch (err) {
+      error = err instanceof Error ? err : new Error("Unknown error");
+      logNetworkOperation("fetchTestimonials", Date.now() - startTime, error);
+      throw error;
+    }
+  },
+
+  // Submit a new review (simulates POST /api/reviews)
+  async submitReview(
+    review: Omit<Review, "id" | "timestamp">
+  ): Promise<Review> {
+    const startTime = Date.now();
+    let error: Error | undefined;
+
+    try {
+      // Use POST delay configuration
+      const delay = getNetworkDelay("post");
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      checkForSimulatedError("submitReview");
+
+      const newReview: Review = {
+        ...review,
+        id: Date.now().toString(),
+        timestamp: Date.now(),
+      };
+
+      // In a real app, this would be handled by the backend
+      mockReviews.unshift(newReview);
+
+      logNetworkOperation("submitReview", Date.now() - startTime);
+      return newReview;
+    } catch (err) {
+      error = err instanceof Error ? err : new Error("Unknown error");
+      logNetworkOperation("submitReview", Date.now() - startTime, error);
+      throw error;
+    }
+  },
+
+  // Delete a review (simulates DELETE /api/reviews/:id)
+  async deleteReview(reviewId: string): Promise<void> {
+    const startTime = Date.now();
+    let error: Error | undefined;
+
+    try {
+      await simulateNetworkDelay("deleteReview");
+      checkForSimulatedError("deleteReview");
+
+      const index = mockReviews.findIndex((review) => review.id === reviewId);
+      if (index > -1) {
+        mockReviews.splice(index, 1);
+      }
+
+      logNetworkOperation("deleteReview", Date.now() - startTime);
+    } catch (err) {
+      error = err instanceof Error ? err : new Error("Unknown error");
+      logNetworkOperation("deleteReview", Date.now() - startTime, error);
+      throw error;
+    }
+  },
+
+  // Update a review (simulates PUT /api/reviews/:id)
+  async updateReview(
+    reviewId: string,
+    updates: Partial<Review>
+  ): Promise<Review> {
+    const startTime = Date.now();
+    let error: Error | undefined;
+
+    try {
+      await simulateNetworkDelay("updateReview");
+      checkForSimulatedError("updateReview");
+
+      const reviewIndex = mockReviews.findIndex(
+        (review) => review.id === reviewId
+      );
+      if (reviewIndex === -1) {
+        throw new Error("Review not found");
+      }
+
+      mockReviews[reviewIndex] = { ...mockReviews[reviewIndex], ...updates };
+      const result = mockReviews[reviewIndex];
+
+      logNetworkOperation("updateReview", Date.now() - startTime);
+      return result;
+    } catch (err) {
+      error = err instanceof Error ? err : new Error("Unknown error");
+      logNetworkOperation("updateReview", Date.now() - startTime, error);
+      throw error;
+    }
+  },
+};
+
+// Types for API responses
+export interface ApiResponse<T> {
+  data: T;
+  success: boolean;
+  message?: string;
+}
+
+export interface ApiError {
+  message: string;
+  status?: number;
+}
