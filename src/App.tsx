@@ -296,25 +296,7 @@ function App() {
               </Card>
             )}
 
-            {/* Related Commands */}
-            {currentCommand && currentCommand.relatedCommands.length > 0 && (
-              <Card className="bg-card border border-border p-4">
-                <h3 className="font-medium text-foreground mb-3">Related Commands</h3>
-                <div className="space-y-2">
-                  {currentCommand.relatedCommands.map((command) => (
-                    <Button
-                      key={command}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleSuggestionClick(command)}
-                      className="w-full justify-start text-xs font-mono h-8"
-                    >
-                      {command}
-                    </Button>
-                  ))}
-                </div>
-              </Card>
-            )}
+
 
             {/* Help */}
             <Card className="bg-card border border-border p-4">
