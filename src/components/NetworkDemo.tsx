@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { networkConfig } from "@/config/network";
 import { apiService } from "@/services/api";
 import { LoadingSpinner } from "./LoadingStates";
+import { appStrings } from "@/config/strings";
 
 export function NetworkDemo() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -46,7 +47,9 @@ export function NetworkDemo() {
     } catch (error) {
       addResult(
         `❌ Network test failed: ${
-          error instanceof Error ? error.message : "Unknown error"
+          error instanceof Error
+            ? error.message
+            : appStrings.errors.network.unknownError
         }`
       );
     } finally {

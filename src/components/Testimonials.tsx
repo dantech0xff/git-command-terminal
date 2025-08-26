@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { StarRating } from "./StarRating";
 import { Testimonial } from "@/types";
+import { appStrings } from "@/config/strings";
 
 interface TestimonialsProps {
   testimonials: Testimonial[];
@@ -11,10 +12,10 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
     <div className="mt-8 sm:mt-12">
       <div className="text-center mb-6 sm:mb-8">
         <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
-          What Users Say
+          {appStrings.sections.testimonials.title}
         </h2>
         <p className="text-sm sm:text-base text-muted-foreground">
-          Hear from developers who improved their Git skills
+          {appStrings.sections.testimonials.subtitle}
         </p>
       </div>
 

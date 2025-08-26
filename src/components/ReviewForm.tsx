@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { StarRating } from "./StarRating";
 import { Review } from "@/types";
+import { appStrings } from "@/config/strings";
 
 interface ReviewFormProps {
   onSubmit: (review: Review) => void;
@@ -40,24 +41,24 @@ export function ReviewForm({ onSubmit, onCancel }: ReviewFormProps) {
   return (
     <Card className="bg-card border border-border p-4 sm:p-6 mb-4 sm:mb-6">
       <h3 className="font-medium text-foreground mb-3 sm:mb-4 text-sm sm:text-base">
-        Share Your Review
+        {appStrings.forms.review.title}
       </h3>
       <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
         <div>
           <label className="text-xs sm:text-sm font-medium text-foreground mb-2 block">
-            Your Name
+            {appStrings.forms.review.nameLabel}
           </label>
           <Input
             value={reviewName}
             onChange={(e) => setReviewName(e.target.value)}
-            placeholder="Enter your name"
+            placeholder={appStrings.ui.placeholders.enterName}
             className="bg-background text-sm"
           />
         </div>
 
         <div>
           <label className="text-xs sm:text-sm font-medium text-foreground mb-2 block">
-            Rating
+            {appStrings.forms.review.ratingLabel}
           </label>
           <div className="flex items-center gap-1">
             <StarRating
@@ -73,26 +74,26 @@ export function ReviewForm({ onSubmit, onCancel }: ReviewFormProps) {
 
         <div>
           <label className="text-xs sm:text-sm font-medium text-foreground mb-2 block">
-            Your Review
+            {appStrings.forms.review.commentLabel}
           </label>
           <Textarea
             value={reviewComment}
             onChange={(e) => setReviewComment(e.target.value)}
-            placeholder="Tell us about your experience with Git Command Terminal..."
+            placeholder={appStrings.ui.placeholders.enterComment}
             className="bg-background min-h-[80px] sm:min-h-[100px] text-sm"
           />
         </div>
 
         <div className="flex gap-2">
           <Button type="submit" className="text-sm px-3 py-2">
-            Submit Review
+            {appStrings.forms.review.submitButton}
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={onCancel}
             className="text-sm px-3 py-2">
-            Cancel
+            {appStrings.forms.review.cancelButton}
           </Button>
         </div>
       </form>

@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { themes } from "@/lib/themes";
+import { appStrings } from "@/config/strings";
 
 interface AppHeaderProps {
   currentThemeId: string;
@@ -24,7 +25,7 @@ export function AppHeader({
     <div className="flex items-center gap-2 sm:gap-3 text-foreground">
       <Terminal size={20} weight="bold" className="sm:hidden" />
       <Terminal size={24} weight="bold" className="hidden sm:block" />
-      <h1 className="text-lg sm:text-xl font-bold">Git Command Terminal</h1>
+      <h1 className="text-lg sm:text-xl font-bold">{appStrings.app.title}</h1>
       <div className="ml-auto flex gap-1 sm:gap-2 items-center">
         {/* Theme Selector */}
         <div className="flex items-center gap-1 sm:gap-2">
@@ -51,7 +52,7 @@ export function AppHeader({
           size="sm"
           onClick={onClearTerminal}
           className="text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground">
-          Clear
+          {appStrings.ui.buttons.clear}
         </Button>
       </div>
     </div>

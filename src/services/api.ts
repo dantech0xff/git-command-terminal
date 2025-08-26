@@ -5,6 +5,7 @@ import {
   logNetworkOperation,
   networkConfig,
 } from "@/config/network";
+import { appStrings } from "@/config/strings";
 
 // Mock data that was previously in App.tsx
 const mockReviews: Review[] = [
@@ -30,7 +31,7 @@ const mockTestimonials: Testimonial[] = [
   {
     id: "1",
     name: "Sarah Chen",
-    role: "Junior Developer",
+    role: appStrings.community.roles.juniorDeveloper,
     rating: 5,
     comment:
       "This terminal helped me learn Git commands so much faster! The interactive approach makes it easy to understand what each command does.",
@@ -39,7 +40,7 @@ const mockTestimonials: Testimonial[] = [
   {
     id: "2",
     name: "Mike Rodriguez",
-    role: "CS Student",
+    role: appStrings.community.roles.student,
     rating: 5,
     comment:
       "Perfect for beginners! I went from being scared of Git to confidently using it in my projects. The command suggestions are brilliant.",
@@ -48,7 +49,7 @@ const mockTestimonials: Testimonial[] = [
   {
     id: "3",
     name: "Alex Kim",
-    role: "Bootcamp Graduate",
+    role: appStrings.community.roles.bootcampGraduate,
     rating: 4,
     comment:
       "Great learning tool. The terminal interface feels authentic and the explanations are clear and concise.",
@@ -79,15 +80,25 @@ export const apiService = {
     let error: Error | undefined;
 
     try {
-      await simulateNetworkDelay("fetchReviews");
-      checkForSimulatedError("fetchReviews");
+      await simulateNetworkDelay(appStrings.apiOperations.fetchReviews);
+      checkForSimulatedError(appStrings.apiOperations.fetchReviews);
 
       const result = [...mockReviews];
-      logNetworkOperation("fetchReviews", Date.now() - startTime);
+      logNetworkOperation(
+        appStrings.apiOperations.fetchReviews,
+        Date.now() - startTime
+      );
       return result;
     } catch (err) {
-      error = err instanceof Error ? err : new Error("Unknown error");
-      logNetworkOperation("fetchReviews", Date.now() - startTime, error);
+      error =
+        err instanceof Error
+          ? err
+          : new Error(appStrings.errors.network.unknownError);
+      logNetworkOperation(
+        appStrings.apiOperations.fetchReviews,
+        Date.now() - startTime,
+        error
+      );
       throw error;
     }
   },
@@ -98,15 +109,25 @@ export const apiService = {
     let error: Error | undefined;
 
     try {
-      await simulateNetworkDelay("fetchTestimonials");
-      checkForSimulatedError("fetchTestimonials");
+      await simulateNetworkDelay(appStrings.apiOperations.fetchTestimonials);
+      checkForSimulatedError(appStrings.apiOperations.fetchTestimonials);
 
       const result = [...mockTestimonials];
-      logNetworkOperation("fetchTestimonials", Date.now() - startTime);
+      logNetworkOperation(
+        appStrings.apiOperations.fetchTestimonials,
+        Date.now() - startTime
+      );
       return result;
     } catch (err) {
-      error = err instanceof Error ? err : new Error("Unknown error");
-      logNetworkOperation("fetchTestimonials", Date.now() - startTime, error);
+      error =
+        err instanceof Error
+          ? err
+          : new Error(appStrings.errors.network.unknownError);
+      logNetworkOperation(
+        appStrings.apiOperations.fetchTestimonials,
+        Date.now() - startTime,
+        error
+      );
       throw error;
     }
   },
@@ -122,7 +143,7 @@ export const apiService = {
       // Use POST delay configuration
       const delay = getNetworkDelay("post");
       await new Promise((resolve) => setTimeout(resolve, delay));
-      checkForSimulatedError("submitReview");
+      checkForSimulatedError(appStrings.apiOperations.submitReview);
 
       const newReview: Review = {
         ...review,
@@ -133,11 +154,21 @@ export const apiService = {
       // In a real app, this would be handled by the backend
       mockReviews.unshift(newReview);
 
-      logNetworkOperation("submitReview", Date.now() - startTime);
+      logNetworkOperation(
+        appStrings.apiOperations.submitReview,
+        Date.now() - startTime
+      );
       return newReview;
     } catch (err) {
-      error = err instanceof Error ? err : new Error("Unknown error");
-      logNetworkOperation("submitReview", Date.now() - startTime, error);
+      error =
+        err instanceof Error
+          ? err
+          : new Error(appStrings.errors.network.unknownError);
+      logNetworkOperation(
+        appStrings.apiOperations.submitReview,
+        Date.now() - startTime,
+        error
+      );
       throw error;
     }
   },
@@ -148,18 +179,28 @@ export const apiService = {
     let error: Error | undefined;
 
     try {
-      await simulateNetworkDelay("deleteReview");
-      checkForSimulatedError("deleteReview");
+      await simulateNetworkDelay(appStrings.apiOperations.deleteReview);
+      checkForSimulatedError(appStrings.apiOperations.deleteReview);
 
       const index = mockReviews.findIndex((review) => review.id === reviewId);
       if (index > -1) {
         mockReviews.splice(index, 1);
       }
 
-      logNetworkOperation("deleteReview", Date.now() - startTime);
+      logNetworkOperation(
+        appStrings.apiOperations.deleteReview,
+        Date.now() - startTime
+      );
     } catch (err) {
-      error = err instanceof Error ? err : new Error("Unknown error");
-      logNetworkOperation("deleteReview", Date.now() - startTime, error);
+      error =
+        err instanceof Error
+          ? err
+          : new Error(appStrings.errors.network.unknownError);
+      logNetworkOperation(
+        appStrings.apiOperations.deleteReview,
+        Date.now() - startTime,
+        error
+      );
       throw error;
     }
   },
@@ -173,24 +214,34 @@ export const apiService = {
     let error: Error | undefined;
 
     try {
-      await simulateNetworkDelay("updateReview");
-      checkForSimulatedError("updateReview");
+      await simulateNetworkDelay(appStrings.apiOperations.updateReview);
+      checkForSimulatedError(appStrings.apiOperations.updateReview);
 
       const reviewIndex = mockReviews.findIndex(
         (review) => review.id === reviewId
       );
       if (reviewIndex === -1) {
-        throw new Error("Review not found");
+        throw new Error(appStrings.terminal.errors.reviewNotFound);
       }
 
       mockReviews[reviewIndex] = { ...mockReviews[reviewIndex], ...updates };
       const result = mockReviews[reviewIndex];
 
-      logNetworkOperation("updateReview", Date.now() - startTime);
+      logNetworkOperation(
+        appStrings.apiOperations.updateReview,
+        Date.now() - startTime
+      );
       return result;
     } catch (err) {
-      error = err instanceof Error ? err : new Error("Unknown error");
-      logNetworkOperation("updateReview", Date.now() - startTime, error);
+      error =
+        err instanceof Error
+          ? err
+          : new Error(appStrings.errors.network.unknownError);
+      logNetworkOperation(
+        appStrings.apiOperations.updateReview,
+        Date.now() - startTime,
+        error
+      );
       throw error;
     }
   },

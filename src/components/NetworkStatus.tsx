@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { LoadingSpinner } from "./LoadingStates";
+import { appStrings } from "@/config/strings";
 
 interface NetworkStatusProps {
   loading: boolean;
@@ -45,18 +46,18 @@ export function NetworkStatus({ loading, error, onRetry }: NetworkStatusProps) {
                   clipRule="evenodd"
                 />
               </svg>
-              <span>Network Error</span>
+              <span>{appStrings.errors.network.title}</span>
               {onRetry && (
                 <button
                   onClick={onRetry}
                   className="ml-2 underline hover:no-underline">
-                  Retry
+                  {appStrings.ui.buttons.retry}
                 </button>
               )}
             </>
           ) : (
             <>
-              <span>Live</span>
+              <span>{appStrings.development.networkStatus.success}</span>
             </>
           )}
         </div>

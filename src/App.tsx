@@ -26,6 +26,7 @@ import { NetworkDemo } from "./components/NetworkDemo";
 import { TerminalEntry, Review, Testimonial } from "./types";
 import { useReviews, useAllTestimonials } from "./hooks/useData";
 import { isLocalhost } from "./utils/environment";
+import { appStrings, strings } from "./config/strings";
 
 function App() {
   const [input, setInput] = useState("");
@@ -82,7 +83,9 @@ function App() {
     setCurrentTheme(themeId);
     const theme = themes.find((t) => t.id === themeId);
     if (theme) {
-      toast.success(`Switched to ${theme.name} theme`);
+      toast.success(
+        strings.buildSuccessMessage("themeChanged", { themeName: theme.name })
+      );
     }
   };
 
@@ -114,25 +117,37 @@ function App() {
       setCurrentCommand(gitCmd);
 
       // Add command output
-      addEntry("output", `Command: ${gitCmd.command}`);
-      addEntry("output", `Description: ${gitCmd.description}`);
-      addEntry("output", `Usage: ${gitCmd.usage}`);
+      addEntry(
+        "output",
+        `${appStrings.terminal.output.command}: ${gitCmd.command}`
+      );
+      addEntry(
+        "output",
+        `${appStrings.terminal.output.description}: ${gitCmd.description}`
+      );
+      addEntry(
+        "output",
+        `${appStrings.terminal.output.usage}: ${gitCmd.usage}`
+      );
 
       if (gitCmd.examples.length > 0) {
-        addEntry("output", "Examples:");
+        addEntry("output", appStrings.terminal.output.examples);
         gitCmd.examples.forEach((example: string) => {
           addEntry("output", `  ${example}`);
         });
       }
     } else {
       setCurrentCommand(null);
-      addEntry("error", `Command not found: ${input}`);
-      addEntry("error", "Try one of these common Git commands:");
-      addEntry("error", "  git init, git add, git commit, git push, git pull");
+      addEntry(
+        "error",
+        `${appStrings.terminal.errors.commandNotFound}: ${input}`
+      );
+      addEntry("error", appStrings.terminal.errors.tryTheseCommands);
+      addEntry("error", `  ${appStrings.terminal.errors.commonCommands}`);
 
       const suggestions = getCommandSuggestions(input);
       if (suggestions.length > 0) {
-        addEntry("error", "Did you mean:");
+        addEntry("error", appStrings.terminal.errors.didYouMean);
         suggestions.forEach((suggestion) => {
           addEntry("error", `  ${suggestion}`);
         });
@@ -251,12 +266,12 @@ function App() {
 
         {testimonialsLoading ? (
           <LoadingState
-            title="Loading testimonials..."
-            description="Fetching user testimonials and reviews"
+            title={appStrings.loading.testimonials.title}
+            description={appStrings.loading.testimonials.description}
           />
         ) : testimonialsError ? (
           <ErrorState
-            title="Failed to load testimonials"
+            title={appStrings.errors.testimonials.title}
             description={testimonialsError}
           />
         ) : (
@@ -267,16 +282,16 @@ function App() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">
-                User Reviews
+                {appStrings.sections.reviews.title}
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground">
-                Share your experience with the community
+                {appStrings.sections.reviews.subtitle}
               </p>
             </div>
             <button
               onClick={() => setShowReviewForm(!showReviewForm)}
               className="flex items-center gap-2 text-sm px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
-              Leave Review
+              {appStrings.ui.buttons.leaveReview}
             </button>
           </div>
 
@@ -289,12 +304,12 @@ function App() {
 
           {reviewsLoading ? (
             <LoadingState
-              title="Loading reviews..."
-              description="Fetching user reviews"
+              title={appStrings.loading.reviews.title}
+              description={appStrings.loading.reviews.description}
             />
           ) : reviewsError ? (
             <ErrorState
-              title="Failed to load reviews"
+              title={appStrings.errors.reviews.title}
               description={reviewsError}
             />
           ) : (

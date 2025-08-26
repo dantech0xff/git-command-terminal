@@ -3,6 +3,7 @@ import { useKV } from "@github/spark/hooks";
 import { Review, Testimonial } from "@/types";
 import { apiService, ApiError } from "@/services/api";
 import { toast } from "sonner";
+import { appStrings } from "@/config/strings";
 
 interface UseDataState<T> {
   data: T | null;
@@ -50,7 +51,9 @@ export function useReviews() {
         });
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Failed to fetch reviews";
+          error instanceof Error
+            ? error.message
+            : appStrings.errors.reviews.fetch;
         setState({
           data: reviews || [],
           loading: false,
@@ -78,11 +81,13 @@ export function useReviews() {
         loading: false,
       }));
 
-      toast.success("Review submitted successfully!");
+      toast.success(appStrings.success.reviewSubmitted);
       return newReview;
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to submit review";
+        error instanceof Error
+          ? error.message
+          : appStrings.errors.reviews.submit;
       setState((prev) => ({ ...prev, loading: false, error: errorMessage }));
       toast.error("Failed to submit review. Please try again.");
       throw error;
@@ -102,10 +107,12 @@ export function useReviews() {
         data: updatedReviews,
       }));
 
-      toast.success("Review deleted successfully!");
+      toast.success(appStrings.success.reviewDeleted);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to delete review";
+        error instanceof Error
+          ? error.message
+          : appStrings.errors.reviews.delete;
       toast.error(errorMessage);
       throw error;
     }
@@ -148,7 +155,7 @@ export function useTestimonials() {
         const errorMessage =
           error instanceof Error
             ? error.message
-            : "Failed to fetch testimonials";
+            : appStrings.errors.testimonials.fetch;
         setState({
           data: [],
           loading: false,
@@ -182,7 +189,7 @@ export function useAllTestimonials() {
     ...(reviews || []).map((review) => ({
       id: review.id,
       name: review.name,
-      role: "Community Member",
+      role: appStrings.community.defaultRole,
       rating: review.rating,
       comment: review.comment,
       avatar: "👤",

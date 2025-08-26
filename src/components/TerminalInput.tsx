@@ -1,4 +1,5 @@
 import { RefObject } from "react";
+import { appStrings } from "@/config/strings";
 
 interface TerminalInputProps {
   input: string;
@@ -17,7 +18,9 @@ export function TerminalInput({
 }: TerminalInputProps) {
   return (
     <form onSubmit={onSubmit} className="flex items-center gap-1 sm:gap-2">
-      <span className="text-primary font-mono text-sm">$</span>
+      <span className="text-primary font-mono text-sm">
+        {appStrings.terminal.prompt}
+      </span>
       <input
         ref={inputRef}
         type="text"
@@ -25,7 +28,7 @@ export function TerminalInput({
         onChange={(e) => onInputChange(e.target.value)}
         onKeyDown={onKeyDown}
         className="flex-1 bg-transparent border-none outline-none text-foreground font-mono text-xs sm:text-sm placeholder:text-muted-foreground"
-        placeholder="Enter git command..."
+        placeholder={appStrings.ui.placeholders.enterCommand}
         autoComplete="off"
       />
       <span className="text-primary font-mono terminal-cursor text-sm">|</span>
