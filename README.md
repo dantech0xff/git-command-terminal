@@ -127,7 +127,9 @@ We welcome contributions! Here's how you can help improve the Git Command Termin
 - **Accessibility** - Help make the app more accessible to all users
 - **Performance** - Optimize loading times and interactions
 - **Documentation** - Improve guides and help content
-- **Review System** - Enhance the community feedback features
+- **Review System** - Enhance the community feedback features in `/src/components/Review*.tsx`
+- **Network Simulation** - Improve the mock API system in `/src/services/api.ts`
+- **Configuration** - Enhance the string and network configuration systems in `/src/config/`
 
 ### Code Standards
 - Use TypeScript for all new code
@@ -141,20 +143,76 @@ We welcome contributions! Here's how you can help improve the Git Command Termin
 ```
 src/
 ├── components/          # Reusable UI components
-│   └── ui/             # Radix UI component wrappers (shadcn/ui)
+│   ├── AppHeader.tsx   # Application header with theme selector
+│   ├── AppFooter.tsx   # Application footer
+│   ├── TerminalSection.tsx    # Main terminal container
+│   ├── TerminalInput.tsx      # Command input interface
+│   ├── TerminalDisplay.tsx    # Command output display
+│   ├── CommandDetails.tsx     # Command information panel
+│   ├── CommandSuggestions.tsx # Related command suggestions
+│   ├── ReviewForm.tsx         # User review submission form
+│   ├── ReviewList.tsx         # Display user reviews
+│   ├── Testimonials.tsx       # Community testimonials
+│   ├── StarRating.tsx         # Star rating component
+│   ├── NetworkStatus.tsx      # Network activity indicator
+│   ├── NetworkDemo.tsx        # Network simulation controls (dev)
+│   ├── LoadingStates.tsx      # Loading and error states
+│   ├── HelpTips.tsx          # User guidance tips
+│   └── ui/                   # Radix UI component wrappers (shadcn/ui)
+│       ├── button.tsx        # Button components
+│       ├── card.tsx          # Card components
+│       ├── input.tsx         # Input components
+│       ├── dialog.tsx        # Dialog components
+│       └── [40+ other UI components]
+├── config/              # Configuration and settings
+│   ├── strings.ts      # Centralized text content and labels
+│   ├── network.ts      # Network simulation configuration
+│   └── README.md       # Configuration system documentation
 ├── hooks/              # Custom React hooks
+│   ├── useData.ts      # Data fetching and state management
+│   └── use-mobile.ts   # Mobile device detection
 ├── lib/                # Core application logic
 │   ├── git-commands.ts # Git command definitions and parsing
 │   ├── themes.ts       # Theme definitions and management
 │   └── utils.ts        # Utility functions
+├── services/           # External service integrations
+│   └── api.ts          # API service layer with network simulation
 ├── styles/             # CSS and theme files
-│   ├── theme.css       # Radix color imports
-│   └── index.css       # Global styles and custom CSS
+│   └── theme.css       # Radix color imports
+├── types/              # TypeScript type definitions
+│   └── index.ts        # Shared type definitions
+├── utils/              # Additional utility functions
+│   └── environment.ts  # Environment detection utilities
 ├── App.tsx             # Main application component
 ├── main.tsx           # Application entry point
+├── ErrorFallback.tsx   # Error boundary component
+├── index.css           # Global styles and custom CSS
+├── main.css           # Additional styling
 ├── prd.md             # Product Requirements Document
-└── ErrorFallback.tsx   # Error boundary component
+└── vite-end.d.ts      # Vite environment type definitions
 ```
+
+### Key Architecture Features
+
+#### Network Simulation System
+The application includes a sophisticated network simulation system that prepares it for real-world deployment:
+- **Mock API Layer** (`/src/services/api.ts`) - Simulates REST endpoints with realistic delays
+- **Network Configuration** (`/src/config/network.ts`) - Configurable response times and error rates
+- **Loading States** - Comprehensive loading and error handling throughout the UI
+- **Development Tools** - Network demo widget for testing various network conditions
+
+#### Configuration Management
+- **Centralized Strings** (`/src/config/strings.ts`) - All user-facing text in one location for easy localization
+- **Type-Safe Configuration** - Strongly typed configuration with IntelliSense support
+- **Environment Detection** (`/src/utils/environment.ts`) - Smart environment-specific features
+
+#### Component Architecture
+- **Atomic Design** - Reusable UI components built on Radix UI primitives
+- **Custom Hooks** - Dedicated hooks for data fetching and mobile detection
+- **Error Boundaries** - Graceful error handling with fallback components
+- **Theme System** - Dynamic theme switching with persistent preferences
+
+See [NETWORK_SIMULATION.md](NETWORK_SIMULATION.md) and [src/config/README.md](src/config/README.md) for detailed documentation.
 
 ## 📄 License
 
