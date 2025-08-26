@@ -66,8 +66,8 @@ function App() {
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  // Sample testimonials data
-  const testimonials: Testimonial[] = [
+  // Base testimonials data
+  const baseTestimonials: Testimonial[] = [
     {
       id: '1',
       name: 'Sarah Chen',
@@ -92,6 +92,19 @@ function App() {
       comment: 'Great learning tool. The terminal interface feels authentic and the explanations are clear and concise.',
       avatar: '🧑‍💻'
     }
+  ]
+
+  // Combine testimonials with user reviews
+  const allTestimonials = [
+    ...baseTestimonials,
+    ...reviews.map(review => ({
+      id: review.id,
+      name: review.name,
+      role: 'Community Member',
+      rating: review.rating,
+      comment: review.comment,
+      avatar: '👤'
+    }))
   ]
 
   useEffect(() => {
@@ -453,7 +466,7 @@ function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {testimonials.map((testimonial) => (
+            {allTestimonials.map((testimonial) => (
               <Card key={testimonial.id} className="bg-card border border-border p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="text-2xl">{testimonial.avatar}</div>
@@ -548,37 +561,30 @@ function App() {
 
           {/* Display Reviews */}
           <div className="space-y-4">
-            {reviews.length === 0 ? (
-              <Card className="bg-card border border-border p-8 text-center">
-                <User size={32} className="mx-auto text-muted-foreground mb-3" />
-                <p className="text-muted-foreground">No reviews yet. Be the first to share your experience!</p>
-              </Card>
-            ) : (
-              reviews.map((review) => (
-                <Card key={review.id} className="bg-card border border-border p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                        <User size={16} className="text-primary" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-foreground">{review.name}</div>
-                        <div className="flex items-center gap-1">
-                          {renderStars(review.rating)}
-                        </div>
-                      </div>
+            {reviews.map((review) => (
+              <Card key={review.id} className="bg-card border border-border p-6">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+                      <User size={16} className="text-primary" />
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {new Date(review.timestamp).toLocaleDateString()}
+                    <div>
+                      <div className="font-medium text-foreground">{review.name}</div>
+                      <div className="flex items-center gap-1">
+                        {renderStars(review.rating)}
+                      </div>
                     </div>
                   </div>
-                  
-                  <p className="text-sm text-card-foreground leading-relaxed">
-                    {review.comment}
-                  </p>
-                </Card>
-              ))
-            )}
+                  <div className="text-xs text-muted-foreground">
+                    {new Date(review.timestamp).toLocaleDateString()}
+                  </div>
+                </div>
+                
+                <p className="text-sm text-card-foreground leading-relaxed">
+                  {review.comment}
+                </p>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
