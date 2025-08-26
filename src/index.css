@@ -82,3 +82,28 @@ body {
   from, to { opacity: 1; }
   50% { opacity: 0; }
 }
+
+/* Custom cursor styles for clickable elements */
+button, .cursor-pointer, [role="button"] {
+  cursor: pointer;
+}
+
+a, a:hover {
+  cursor: alias;
+}
+
+.suggestion-link {
+  cursor: crosshair;
+}
+
+input, textarea, [contenteditable] {
+  cursor: text;
+}
+
+.copy-button {
+  cursor: copy;
+}
+
+.theme-selector {
+  cursor: context-menu;
+}

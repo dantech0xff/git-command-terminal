@@ -330,7 +330,7 @@ function App() {
             <div className="flex items-center gap-2">
               <Palette size={16} className="text-muted-foreground" />
               <Select value={currentThemeId} onValueChange={handleThemeChange}>
-                <SelectTrigger className="w-40 h-8 text-xs">
+                <SelectTrigger className="w-40 h-8 text-xs theme-selector">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -420,7 +420,7 @@ function App() {
                       <span key={suggestion}>
                         <button
                           onClick={() => handleSuggestionClick(suggestion)}
-                          className="text-accent hover:text-accent-foreground underline"
+                          className="text-accent hover:text-accent-foreground underline suggestion-link"
                         >
                           {suggestion}
                         </button>
@@ -473,7 +473,7 @@ function App() {
                               variant="ghost"
                               size="sm"
                               onClick={() => copyToClipboard(example)}
-                              className="h-6 w-6 p-0"
+                              className="h-6 w-6 p-0 copy-button"
                             >
                               <Copy size={12} />
                             </Button>
