@@ -3,7 +3,7 @@ import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Terminal, Copy, ExternalLink } from '@phosphor-icons/react'
+import { Terminal, Copy } from '@phosphor-icons/react'
 import { gitCommands, parseGitCommand, getCommandSuggestions, type GitCommand } from '@/lib/git-commands'
 
 interface TerminalEntry {
@@ -41,7 +41,7 @@ function App() {
       content,
       timestamp: Date.now()
     }
-    setEntries(prev => [...prev, newEntry])
+    setEntries(currentEntries => [...currentEntries, newEntry])
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -50,7 +50,7 @@ function App() {
 
     // Add command to history
     addEntry('command', `$ ${input}`)
-    setCommandHistory(prev => [...prev, input])
+    setCommandHistory(currentHistory => [...currentHistory, input])
     setHistoryIndex(-1)
 
     // Parse and process command
@@ -172,8 +172,8 @@ function App() {
                 </div>
 
                 {/* Terminal Output */}
-                <ScrollArea className="h-96" ref={scrollRef}>
-                  <div className="space-y-1 text-sm font-mono">
+                <ScrollArea className="h-96">
+                  <div ref={scrollRef} className="space-y-1 text-sm font-mono">
                     {entries.length === 0 && (
                       <div className="text-muted-foreground">
                         <p>Welcome to Git Command Terminal!</p>
