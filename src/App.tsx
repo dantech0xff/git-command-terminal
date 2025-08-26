@@ -3,14 +3,34 @@ import { useKV } from '@github/spark/hooks'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Terminal, Copy } from '@phosphor-icons/react'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { Terminal, Copy, Star, StarHalf, User, Heart } from '@phosphor-icons/react'
 import { gitCommands, parseGitCommand, getCommandSuggestions, type GitCommand } from '@/lib/git-commands'
+import { toast, Toaster } from 'sonner'
 
 interface TerminalEntry {
   id: string
   type: 'command' | 'output' | 'error'
   content: string
   timestamp: number
+}
+
+interface Review {
+  id: string
+  name: string
+  rating: number
+  comment: string
+  timestamp: number
+}
+
+interface Testimonial {
+  id: string
+  name: string
+  role: string
+  rating: number
+  comment: string
+  avatar: string
 }
 
 function App() {
@@ -21,8 +41,58 @@ function App() {
   const [currentCommand, setCurrentCommand] = useState<GitCommand | null>(null)
   const [suggestions, setSuggestions] = useState<string[]>([])
   
+  // Review state
+  const [reviews, setReviews] = useKV<Review[]>('user-reviews', [
+    {
+      id: 'demo-1',
+      name: 'Jordan Smith',
+      rating: 5,
+      comment: 'This is exactly what I needed to finally understand Git! The terminal interface makes it feel like real practice.',
+      timestamp: Date.now() - 86400000 * 2 // 2 days ago
+    },
+    {
+      id: 'demo-2', 
+      name: 'Taylor Johnson',
+      rating: 4,
+      comment: 'Great tool for learning. Would love to see more advanced Git workflows covered in the future.',
+      timestamp: Date.now() - 86400000 * 5 // 5 days ago
+    }
+  ])
+  const [reviewName, setReviewName] = useState('')
+  const [reviewRating, setReviewRating] = useState(5)
+  const [reviewComment, setReviewComment] = useState('')
+  const [showReviewForm, setShowReviewForm] = useState(false)
+  
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+
+  // Sample testimonials data
+  const testimonials: Testimonial[] = [
+    {
+      id: '1',
+      name: 'Sarah Chen',
+      role: 'Junior Developer',
+      rating: 5,
+      comment: 'This terminal helped me learn Git commands so much faster! The interactive approach makes it easy to understand what each command does.',
+      avatar: '👩‍💻'
+    },
+    {
+      id: '2', 
+      name: 'Mike Rodriguez',
+      role: 'CS Student',
+      rating: 5,
+      comment: 'Perfect for beginners! I went from being scared of Git to confidently using it in my projects. The command suggestions are brilliant.',
+      avatar: '👨‍🎓'
+    },
+    {
+      id: '3',
+      name: 'Alex Kim',
+      role: 'Bootcamp Graduate',
+      rating: 4,
+      comment: 'Great learning tool. The terminal interface feels authentic and the explanations are clear and concise.',
+      avatar: '🧑‍💻'
+    }
+  ]
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -131,6 +201,70 @@ function App() {
   const clearTerminal = () => {
     setEntries([])
     setCurrentCommand(null)
+  }
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!reviewName.trim() || !reviewComment.trim()) {
+      toast.error('Please fill in all fields')
+      return
+    }
+
+    const newReview: Review = {
+      id: Date.now().toString(),
+      name: reviewName.trim(),
+      rating: reviewRating,
+      comment: reviewComment.trim(),
+      timestamp: Date.now()
+    }
+
+    setReviews(currentReviews => [newReview, ...currentReviews])
+    setReviewName('')
+    setReviewComment('')
+    setReviewRating(5)
+    setShowReviewForm(false)
+    toast.success('Thank you for your review!')
+  }
+
+  const renderStars = (rating: number, interactive = false, onClick?: (rating: number) => void) => {
+    const stars = []
+    const fullStars = Math.floor(rating)
+    const hasHalfStar = rating % 1 !== 0
+
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        stars.push(
+          <Star 
+            key={i} 
+            size={16} 
+            weight="fill" 
+            className={`${interactive ? 'cursor-pointer hover:text-accent' : ''} text-accent`}
+            onClick={interactive ? () => onClick?.(i) : undefined}
+          />
+        )
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        stars.push(
+          <StarHalf 
+            key={i} 
+            size={16} 
+            weight="fill" 
+            className={`${interactive ? 'cursor-pointer hover:text-accent' : ''} text-accent`}
+            onClick={interactive ? () => onClick?.(i) : undefined}
+          />
+        )
+      } else {
+        stars.push(
+          <Star 
+            key={i} 
+            size={16} 
+            weight="regular" 
+            className={`${interactive ? 'cursor-pointer hover:text-accent' : ''} text-muted-foreground`}
+            onClick={interactive ? () => onClick?.(i) : undefined}
+          />
+        )
+      }
+    }
+    return stars
   }
 
   useEffect(() => {
@@ -310,7 +444,155 @@ function App() {
             </Card>
           </div>
         </div>
+
+        {/* Testimonials Section */}
+        <div className="mt-12">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-foreground mb-2">What Users Say</h2>
+            <p className="text-muted-foreground">Hear from developers who improved their Git skills</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {testimonials.map((testimonial) => (
+              <Card key={testimonial.id} className="bg-card border border-border p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-2xl">{testimonial.avatar}</div>
+                  <div>
+                    <div className="font-medium text-foreground">{testimonial.name}</div>
+                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-1 mb-3">
+                  {renderStars(testimonial.rating)}
+                </div>
+                
+                <p className="text-sm text-card-foreground leading-relaxed">
+                  "{testimonial.comment}"
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-12">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground mb-2">User Reviews</h2>
+              <p className="text-muted-foreground">Share your experience with the community</p>
+            </div>
+            <Button 
+              onClick={() => setShowReviewForm(!showReviewForm)}
+              className="flex items-center gap-2"
+            >
+              <Heart size={16} />
+              Leave Review
+            </Button>
+          </div>
+
+          {/* Review Form */}
+          {showReviewForm && (
+            <Card className="bg-card border border-border p-6 mb-6">
+              <h3 className="font-medium text-foreground mb-4">Share Your Review</h3>
+              <form onSubmit={handleReviewSubmit} className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">
+                    Your Name
+                  </label>
+                  <Input
+                    value={reviewName}
+                    onChange={(e) => setReviewName(e.target.value)}
+                    placeholder="Enter your name"
+                    className="bg-background"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">
+                    Rating
+                  </label>
+                  <div className="flex items-center gap-1">
+                    {renderStars(reviewRating, true, setReviewRating)}
+                    <span className="ml-2 text-sm text-muted-foreground">
+                      {reviewRating} star{reviewRating !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">
+                    Your Review
+                  </label>
+                  <Textarea
+                    value={reviewComment}
+                    onChange={(e) => setReviewComment(e.target.value)}
+                    placeholder="Tell us about your experience with Git Command Terminal..."
+                    className="bg-background min-h-[100px]"
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <Button type="submit">Submit Review</Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setShowReviewForm(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </Card>
+          )}
+
+          {/* Display Reviews */}
+          <div className="space-y-4">
+            {reviews.length === 0 ? (
+              <Card className="bg-card border border-border p-8 text-center">
+                <User size={32} className="mx-auto text-muted-foreground mb-3" />
+                <p className="text-muted-foreground">No reviews yet. Be the first to share your experience!</p>
+              </Card>
+            ) : (
+              reviews.map((review) => (
+                <Card key={review.id} className="bg-card border border-border p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+                        <User size={16} className="text-primary" />
+                      </div>
+                      <div>
+                        <div className="font-medium text-foreground">{review.name}</div>
+                        <div className="flex items-center gap-1">
+                          {renderStars(review.rating)}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {new Date(review.timestamp).toLocaleDateString()}
+                    </div>
+                  </div>
+                  
+                  <p className="text-sm text-card-foreground leading-relaxed">
+                    {review.comment}
+                  </p>
+                </Card>
+              ))
+            )}
+          </div>
+        </div>
       </div>
+      <Toaster 
+        theme="dark"
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: 'var(--popover)',
+            color: 'var(--popover-foreground)',
+            border: '1px solid var(--border)',
+          },
+        }}
+      />
     </div>
   )
 }
