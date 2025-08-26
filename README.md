@@ -12,6 +12,10 @@ An interactive terminal-style web application that teaches users Git commands th
 - **📈 Command History** - Persistent history with arrow key navigation between sessions
 - **⚡ Real-time Feedback** - Instant command parsing with autocomplete (Tab key)
 - **🎯 Progressive Learning** - Related commands help users discover Git's interconnected workflow
+- **🎨 Theme Customization** - 6 beautiful themes including Matrix, Oceanic, Sunset, Midnight, Light, and Neon Cyberpunk
+- **⭐ Community Reviews** - User rating and review system for community feedback
+- **🗣️ Testimonials** - Curated positive reviews from users sharing their learning experiences
+- **💾 Data Persistence** - All preferences, history, and reviews saved using GitHub Spark KV storage
 
 ## 🛠️ Technologies Used
 
@@ -26,6 +30,7 @@ An interactive terminal-style web application that teaches users Git commands th
 - **JetBrains Mono** font for authentic terminal typography
 - **Phosphor Icons** for crisp, modern iconography
 - **Framer Motion** for smooth, purposeful animations
+- **Sonner** for elegant toast notifications
 
 ### Development Tools
 - **ESLint** with TypeScript support for code quality
@@ -57,16 +62,17 @@ An interactive terminal-style web application that teaches users Git commands th
    ```
 
 4. **Open your browser**
-   Navigate to `http://localhost:5000` to start learning Git commands!
+   Navigate to `http://localhost:5173` to start learning Git commands!
 
 ### Available Scripts
 
 ```bash
-npm run dev      # Start development server
+npm run dev      # Start development server (runs on http://localhost:5173)
 npm run build    # Build for production
 npm run preview  # Preview production build
-npm run lint     # Run ESLint
-npm run optimize # Optimize dependencies
+npm run lint     # Run ESLint for code quality
+npm run optimize # Optimize Vite dependencies
+npm run kill     # Kill process on port 5000 (if needed)
 ```
 
 ## 🎯 How to Use
@@ -80,7 +86,17 @@ npm run optimize # Optimize dependencies
 3. **Navigate history** using ↑/↓ arrow keys
 4. **Use Tab** for command autocomplete
 5. **Click related commands** to discover Git workflows
-6. **Your progress is saved** automatically between sessions
+6. **Customize themes** using the theme selector in the sidebar
+7. **Share your experience** by leaving a review with rating and comments
+8. **Your progress is saved** automatically between sessions
+
+### Available Themes
+- **Matrix Terminal** - Classic green-on-black hacker aesthetic
+- **Oceanic Blue** - Calming blue tones for extended sessions
+- **Sunset Orange** - Warm orange gradients for a cozy feel  
+- **Midnight Purple** - Deep purple theme for night coding
+- **Light Terminal** - Clean light theme for bright environments
+- **Neon Cyberpunk** - Vibrant neon colors for a futuristic experience
 
 ### Example Commands to Try
 - `git init` - Initialize a new repository
@@ -106,10 +122,12 @@ We welcome contributions! Here's how you can help improve the Git Command Termin
 ### Areas for Contribution
 - **New Git Commands** - Add support for additional Git commands in `/src/lib/git-commands.ts`
 - **UI Improvements** - Enhance the terminal interface and user experience
+- **Theme Development** - Create new color themes in `/src/lib/themes.ts`
 - **Educational Content** - Improve command explanations and examples
 - **Accessibility** - Help make the app more accessible to all users
 - **Performance** - Optimize loading times and interactions
 - **Documentation** - Improve guides and help content
+- **Review System** - Enhance the community feedback features
 
 ### Code Standards
 - Use TypeScript for all new code
@@ -123,14 +141,19 @@ We welcome contributions! Here's how you can help improve the Git Command Termin
 ```
 src/
 ├── components/          # Reusable UI components
-│   └── ui/             # Radix UI component wrappers
+│   └── ui/             # Radix UI component wrappers (shadcn/ui)
+├── hooks/              # Custom React hooks
 ├── lib/                # Core application logic
 │   ├── git-commands.ts # Git command definitions and parsing
+│   ├── themes.ts       # Theme definitions and management
 │   └── utils.ts        # Utility functions
 ├── styles/             # CSS and theme files
-│   └── theme.css       # Radix color imports
+│   ├── theme.css       # Radix color imports
+│   └── index.css       # Global styles and custom CSS
 ├── App.tsx             # Main application component
-└── main.tsx           # Application entry point
+├── main.tsx           # Application entry point
+├── prd.md             # Product Requirements Document
+└── ErrorFallback.tsx   # Error boundary component
 ```
 
 ## 📄 License
