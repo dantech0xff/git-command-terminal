@@ -23,6 +23,13 @@ export function AppFooter() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+          <iframe
+            src="https://github.com/sponsors/dantech0xff/button"
+            title="Sponsor dantech0xff"
+            height="32"
+            width="114"
+            style={{ border: 0, borderRadius: '6px' }}
+          />
           <a
             href={appStrings.footer.blogUrl}
             target="_blank"
