@@ -11,9 +11,15 @@ interface UseTerminalHandlersProps {
   input: string;
   setInput: (input: string) => void;
   entries: TerminalEntry[];
-  setEntries: (entries: TerminalEntry[] | ((current: TerminalEntry[] | null) => TerminalEntry[])) => void;
+  setEntries: (
+    entries:
+      | TerminalEntry[]
+      | ((current: TerminalEntry[] | null) => TerminalEntry[])
+  ) => void;
   commandHistory: string[];
-  setCommandHistory: (history: string[] | ((current: string[] | null) => string[])) => void;
+  setCommandHistory: (
+    history: string[] | ((current: string[] | null) => string[])
+  ) => void;
   historyIndex: number;
   setHistoryIndex: (index: number) => void;
   currentCommand: any;
@@ -54,24 +60,18 @@ export function useTerminalHandlers({
     setCurrentCommand(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    // Check for clear command
-    if (input.trim().toLowerCase() === "clear") {
-      clearTerminal();
-      setInput("");
-      return;
-    }
-
+  // Shared function to execute a git command
+  const executeCommand = (commandInput: string) => {
     // Add command to history
-    addEntry("command", `$ ${input}`);
-    setCommandHistory((currentHistory) => [...(currentHistory ?? []), input]);
+    addEntry("command", `$ ${commandInput}`);
+    setCommandHistory((currentHistory) => [
+      ...(currentHistory ?? []),
+      commandInput,
+    ]);
     setHistoryIndex(-1);
 
     // Parse and process command
-    const command = parseGitCommand(input);
+    const command = parseGitCommand(commandInput);
 
     if (command && gitCommands[command]) {
       const gitCmd = gitCommands[command];
@@ -101,12 +101,12 @@ export function useTerminalHandlers({
       setCurrentCommand(null);
       addEntry(
         "error",
-        `${appStrings.terminal.errors.commandNotFound}: ${input}`
+        `${appStrings.terminal.errors.commandNotFound}: ${commandInput}`
       );
       addEntry("error", appStrings.terminal.errors.tryTheseCommands);
       addEntry("error", `  ${appStrings.terminal.errors.commonCommands}`);
 
-      const suggestions = getCommandSuggestions(input);
+      const suggestions = getCommandSuggestions(commandInput);
       if (suggestions.length > 0) {
         addEntry("error", appStrings.terminal.errors.didYouMean);
         suggestions.forEach((suggestion) => {
@@ -114,7 +114,20 @@ export function useTerminalHandlers({
         });
       }
     }
+  };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    // Check for clear command
+    if (input.trim().toLowerCase() === "clear") {
+      clearTerminal();
+      setInput("");
+      return;
+    }
+
+    executeCommand(input);
     setInput("");
   };
 
@@ -152,6 +165,12 @@ export function useTerminalHandlers({
 
   const handleSuggestionClick = (command: string) => {
     setInput(command);
+
+    // Execute the command immediately using shared logic
+    executeCommand(command);
+
+    // Clear the input after execution
+    setInput("");
     inputRef.current?.focus();
   };
 
