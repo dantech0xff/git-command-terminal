@@ -1,92 +1,141 @@
-# Git Command Learning Terminal
+# Git Command Terminal - Product Requirements Document
 
-An interactive terminal-style web application that teaches users Git commands through hands-on exploration and contextual learning.
+## Core Purpose & Success
+- **Mission Statement**: An interactive terminal-style learning platform that teaches Git commands through hands-on practice with immediate feedback and community-driven testimonials.
+- **Success Indicators**: Users successfully learn and retain Git commands, evidenced by positive reviews and continued engagement with the platform.
+- **Experience Qualities**: Educational, Authentic, Community-driven
 
-**Experience Qualities**:
-1. **Authentic** - Feels like using a real terminal with proper syntax highlighting and command history
-2. **Educational** - Provides clear, actionable explanations that build understanding progressively  
-3. **Discoverable** - Suggests related commands to encourage exploration and deeper learning
+## Project Classification & Approach
+- **Complexity Level**: Light Application (multiple features with basic state)
+- **Primary User Activity**: Learning through interaction and sharing experiences
 
-**Complexity Level**: Light Application (multiple features with basic state)
-- Interactive command input with real-time feedback and command history persistence between sessions
+## Thought Process for Feature Selection
+- **Core Problem Analysis**: Developers, especially beginners, struggle to learn Git commands effectively through traditional documentation
+- **User Context**: Users access the tool when learning Git or looking up specific commands, seeking both instruction and community validation
+- **Critical Path**: Command input → Instruction display → Practice → Community engagement through reviews
+- **Key Moments**: First successful command execution, discovering related commands, sharing learning experience
 
 ## Essential Features
 
-**Command Input & Processing**
-- Functionality: Accept Git commands and display comprehensive usage instructions
-- Purpose: Core learning mechanism for understanding Git syntax and options
-- Trigger: User types a Git command and presses Enter
-- Progression: Type command → Parse input → Display explanation → Show related commands → Select next command
-- Success criteria: Accurate command parsing with helpful error messages for invalid syntax
+### Terminal Interface
+- **Functionality**: Authentic terminal experience with command input, history navigation, and output display
+- **Purpose**: Provides familiar environment that mirrors real Git usage
+- **Success Criteria**: Users can navigate command history and execute Git commands naturally
 
-**Related Command Suggestions**
-- Functionality: Display contextually relevant Git commands after each query
-- Purpose: Encourage exploration and teach command relationships
-- Trigger: After displaying any command explanation
-- Progression: Show explanation → Display 3-5 related commands → User clicks suggestion → Load new command
-- Success criteria: Suggestions are contextually relevant and lead to logical learning progression
+### Command Learning System
+- **Functionality**: Parse Git commands and provide comprehensive explanations, usage examples, and related commands with intelligent suggestions
+- **Purpose**: Immediate learning feedback that builds understanding
+- **Success Criteria**: Users understand command purpose and can apply knowledge
 
-**Command History**
-- Functionality: Maintain persistent history of entered commands with navigation
-- Purpose: Allow users to revisit and reference previous commands
-- Trigger: Up/down arrow keys or history display
-- Progression: Navigate history → Select previous command → Re-execute or modify
-- Success criteria: History persists between sessions and supports keyboard navigation
+### Theme Customization
+- **Functionality**: Multiple visual themes (Matrix Terminal, Oceanic Blue, Sunset Orange, Midnight Purple, Light Terminal, Neon Cyberpunk) with persistent user preference
+- **Purpose**: Personalization and accessibility for different visual preferences
+- **Success Criteria**: Users can switch themes seamlessly and preferences persist across sessions
 
-**Terminal Interface**
-- Functionality: Authentic terminal appearance with prompt, cursor, and scrolling output
-- Purpose: Create familiar environment for developers learning Git
-- Trigger: App loads with terminal-ready state
-- Progression: Display prompt → Accept input → Show output → Continue interaction
-- Success criteria: Feels like real terminal with proper keyboard shortcuts and visual feedback
+### Community Testimonials
+- **Functionality**: Display curated positive testimonials from successful learners
+- **Purpose**: Build confidence and showcase learning outcomes
+- **Success Criteria**: New users feel motivated to start learning
 
-## Edge Case Handling
-
-- **Invalid Commands**: Display helpful error messages with suggested corrections
-- **Partial Commands**: Offer autocomplete suggestions for incomplete Git commands  
-- **Empty Input**: Show help text with common starting commands
-- **Long Output**: Implement proper scrolling with command history preservation
-- **Mobile Usage**: Adapt terminal interface for touch input with virtual keyboard support
+### User Review System
+- **Functionality**: Allow users to submit reviews with ratings and comments
+- **Purpose**: Community validation and continuous feedback collection
+- **Success Criteria**: Users actively share their learning experiences
 
 ## Design Direction
 
-The design should evoke the focused, technical atmosphere of a developer's terminal environment while remaining approachable for learners - think VS Code's integrated terminal with enhanced educational features.
+### Visual Tone & Identity
+- **Emotional Response**: Confidence, professionalism, approachability
+- **Design Personality**: Technical yet friendly, like a helpful mentor
+- **Visual Metaphors**: Terminal interface, code editor aesthetics
+- **Simplicity Spectrum**: Clean interface focused on content over decoration
 
-## Color Selection
-
-Complementary (opposite colors) - Using classic terminal green on dark background with orange accents for interactivity and warmth.
-
-- **Primary Color**: Terminal Green (`oklch(0.7 0.15 145)`) - Communicates authenticity and technical proficiency
-- **Secondary Colors**: Dark Terminal Background (`oklch(0.15 0.02 240)`) for immersion, Light Gray (`oklch(0.8 0.02 240)`) for secondary text
-- **Accent Color**: Warm Orange (`oklch(0.7 0.15 45)`) - Highlights interactive elements and calls attention to learning opportunities
+### Color Strategy
+- **Color Scheme Type**: Multiple theme options supporting different visual preferences
+- **Default Theme**: Matrix Terminal - Dark terminal theme with green accents representing authenticity
+- **Theme Variety**: 
+  - Matrix Terminal: Classic green-on-black terminal aesthetic
+  - Oceanic Blue: Calming blue tones for extended learning sessions  
+  - Sunset Orange: Warm, energetic orange palette
+  - Midnight Purple: Deep purple for late-night coding sessions
+  - Light Terminal: High contrast light theme for bright environments
+  - Neon Cyberpunk: Vibrant pink/cyan for modern aesthetic
+- **Color Psychology**: Each theme supports different moods and environments while maintaining readability
+- **Color Accessibility**: All themes maintain WCAG AA contrast ratios
+- **Secondary Colors**: Dark backgrounds (#1e1e2e) for terminal feel
+- **Accent Color**: Warm amber (#f59e0b) for ratings and positive feedback
+- **Color Psychology**: Dark theme reduces eye strain during coding sessions, green suggests growth and success
+- **Color Accessibility**: High contrast ratios maintained throughout
 - **Foreground/Background Pairings**: 
-  - Background (`oklch(0.15 0.02 240)`): Terminal Green text (`oklch(0.7 0.15 145)`) - Ratio 5.2:1 ✓
-  - Card (`oklch(0.18 0.02 240)`): Light Gray text (`oklch(0.8 0.02 240)`) - Ratio 5.8:1 ✓  
-  - Primary (`oklch(0.7 0.15 145)`): Dark text (`oklch(0.15 0.02 240)`) - Ratio 5.2:1 ✓
-  - Accent (`oklch(0.7 0.15 45)`): Dark text (`oklch(0.15 0.02 240)`) - Ratio 5.1:1 ✓
+  - Background: Dark gray (#0f0f23) with Light green text (#7dd3fc)
+  - Cards: Slightly lighter dark (#171717) with Off-white text (#e5e5e5)
+  - Primary: Terminal green (#7dd3fc) with Dark background (#0f0f23)
+  - Accent: Warm amber (#f59e0b) with Dark background (#0f0f23)
 
-## Font Selection
+### Typography System
+- **Font Pairing Strategy**: Monospace throughout for authentic terminal feel
+- **Typographic Hierarchy**: Consistent sizing with bold weights for emphasis
+- **Font Personality**: Technical, readable, professional
+- **Readability Focus**: Optimized line spacing for code readability
+- **Typography Consistency**: Single font family maintains terminal authenticity
+- **Which fonts**: JetBrains Mono - excellent for code display and terminal interfaces
+- **Legibility Check**: JetBrains Mono provides excellent character distinction
 
-Monospace typography that emphasizes code readability and terminal authenticity while maintaining excellent legibility for educational content.
+### Visual Hierarchy & Layout
+- **Attention Direction**: Terminal takes center stage, sidebar provides supporting context
+- **White Space Philosophy**: Generous spacing prevents cognitive overload
+- **Grid System**: Responsive grid adapts from single column on mobile to multi-column on desktop
+- **Responsive Approach**: Mobile-first design with progressive enhancement
+- **Content Density**: Balanced information presentation without overwhelming users
 
-- **Typographic Hierarchy**: 
-  - H1 (App Title): JetBrains Mono Bold/24px/tight letter spacing
-  - Terminal Prompt: JetBrains Mono Regular/16px/normal spacing  
-  - Command Output: JetBrains Mono Regular/14px/relaxed line height
-  - Suggestions: JetBrains Mono Medium/14px/normal spacing
+### Animations
+- **Purposeful Meaning**: Subtle transitions reinforce interaction feedback
+- **Hierarchy of Movement**: Terminal cursor blinking, button hover states
+- **Contextual Appropriateness**: Minimal animations maintain focus on learning
 
-## Animations
+### UI Elements & Component Selection
+- **Component Usage**: Cards for sectioning, Buttons for actions, ScrollArea for terminal output
+- **Component Customization**: Dark theme variants with terminal-inspired styling
+- **Component States**: Clear hover and focus states for all interactive elements
+- **Icon Selection**: Terminal, Star, User, Heart icons support functionality
+- **Component Hierarchy**: Terminal primary, sidebar secondary, reviews tertiary
+- **Spacing System**: Consistent 4px grid system using Tailwind spacing
+- **Mobile Adaptation**: Stack layout on mobile, side-by-side on larger screens
 
-Subtle typing animations and smooth transitions that enhance the terminal experience without overwhelming the educational content.
+### Visual Consistency Framework
+- **Design System Approach**: Component-based design with consistent patterns
+- **Style Guide Elements**: Color palette, typography scale, spacing system
+- **Visual Rhythm**: Regular spacing creates predictable interface patterns
+- **Brand Alignment**: Technical aesthetic aligns with developer audience
 
-- **Purposeful Meaning**: Cursor blinking and text appearing reinforces the authentic terminal feeling while drawing attention to new content
-- **Hierarchy of Movement**: Command input gets immediate feedback, output appears with gentle fade-in, suggestions slide in smoothly
+### Accessibility & Readability
+- **Contrast Goal**: WCAG AA compliance maintained across all text and interactive elements
 
-## Component Selection
+## Edge Cases & Problem Scenarios
+- **Potential Obstacles**: Users unfamiliar with terminal interfaces, command misspellings
+- **Edge Case Handling**: Suggestions for misspelled commands, help text for navigation
+- **Technical Constraints**: Browser compatibility for terminal styling
 
-- **Components**: Custom terminal interface built with shadcn Card and Input components, Button for command suggestions, ScrollArea for output history
-- **Customizations**: Terminal-styled input with custom prompt prefix, syntax-highlighted output display, command suggestion chips
-- **States**: Input focused/blurred, command processing/complete, suggestion hover/selected, history navigation active
-- **Icon Selection**: Terminal icon for app header, ArrowUp/ArrowDown for history, Copy for command examples, ExternalLink for documentation
-- **Spacing**: Consistent 4px terminal line spacing, 8px between command blocks, 16px section padding
-- **Mobile**: Responsive terminal with touch-friendly command suggestions, virtual keyboard optimization, swipe gestures for history
+## Implementation Considerations
+- **Scalability Needs**: Review system can handle growing user base
+- **Testing Focus**: Command parsing accuracy, review submission reliability
+- **Critical Questions**: How to maintain terminal authenticity while remaining accessible
+- **Architecture Pattern**: Handler-based organization for better code separation and maintainability
+- **Configuration Strategy**: Centralized string management for easy localization and content updates
+- **Network Simulation**: Comprehensive mock API system to prepare for real backend integration
+- **Component Design**: Atomic design principles with reusable UI components built on Radix primitives
+
+## Reflection
+- **Unique Approach**: Combines authentic terminal experience with community validation
+- **Assumptions**: Users prefer learning in familiar environments, community feedback motivates learning
+- **Exceptional Elements**: Community-driven testimonials create social proof for learning effectiveness
+
+## Recent Updates
+- Added testimonials section with curated positive reviews from users using carousel component
+- Implemented user review system with star ratings and comment functionality  
+- Enhanced community engagement through shared learning experiences
+- Maintained terminal aesthetic while adding social validation features
+- Introduced handler pattern for better component organization and separation of concerns
+- Added comprehensive string configuration system for better maintainability
+- Implemented network simulation system for realistic development experience
+- Added responsive design with mobile-first approach and touch-friendly interactions
