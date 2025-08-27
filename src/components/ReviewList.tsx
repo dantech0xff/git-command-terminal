@@ -1,4 +1,4 @@
-import { User } from "@phosphor-icons/react";
+import { User } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { StarRating } from "./StarRating";
 import { Review } from "@/types";

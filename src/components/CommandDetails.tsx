@@ -1,4 +1,4 @@
-import { Terminal, Copy } from "@phosphor-icons/react";
+import { Terminal, Copy } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GitCommand } from "@/lib/git-commands";

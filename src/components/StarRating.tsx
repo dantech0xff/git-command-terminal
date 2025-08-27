@@ -1,4 +1,4 @@
-import { Star, StarHalf } from "@phosphor-icons/react";
+import { Star } from "lucide-react";
 
 interface StarRatingProps {
   rating: number;
@@ -21,7 +21,7 @@ export function StarRating({
         <Star
           key={i}
           size={16}
-          weight="fill"
+          fill="currentColor"
           className={`${
             interactive ? "cursor-pointer hover:text-accent" : ""
           } text-accent`}
@@ -29,23 +29,32 @@ export function StarRating({
         />
       );
     } else if (i === fullStars + 1 && hasHalfStar) {
+      // Create a half-star effect using CSS
       stars.push(
-        <StarHalf
-          key={i}
-          size={16}
-          weight="fill"
-          className={`${
-            interactive ? "cursor-pointer hover:text-accent" : ""
-          } text-accent`}
-          onClick={interactive ? () => onClick?.(i) : undefined}
-        />
+        <div key={i} className="relative inline-block">
+          <Star
+            size={16}
+            className={`${
+              interactive ? "cursor-pointer hover:text-accent" : ""
+            } text-muted-foreground`}
+            onClick={interactive ? () => onClick?.(i) : undefined}
+          />
+          <Star
+            size={16}
+            fill="currentColor"
+            className={`absolute top-0 left-0 text-accent overflow-hidden ${
+              interactive ? "cursor-pointer hover:text-accent" : ""
+            }`}
+            style={{ clipPath: "inset(0 50% 0 0)" }}
+            onClick={interactive ? () => onClick?.(i) : undefined}
+          />
+        </div>
       );
     } else {
       stars.push(
         <Star
           key={i}
           size={16}
-          weight="regular"
           className={`${
             interactive ? "cursor-pointer hover:text-accent" : ""
           } text-muted-foreground`}
@@ -54,5 +63,5 @@ export function StarRating({
       );
     }
   }
-  return <>{stars}</>;
+  return <div className="flex items-center gap-1">{stars}</div>;
 }

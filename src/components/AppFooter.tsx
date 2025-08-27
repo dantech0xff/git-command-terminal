@@ -1,4 +1,4 @@
-import { Code, Globe } from "@phosphor-icons/react";
+import { Code, Globe } from "lucide-react";
 import { appStrings, interpolateString } from "@/config/strings";
 
 export function AppFooter() {

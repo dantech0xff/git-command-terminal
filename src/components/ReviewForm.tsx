@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart } from "@phosphor-icons/react";
+import { Heart } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

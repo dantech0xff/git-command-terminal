@@ -1,4 +1,4 @@
-import { Terminal, Palette } from "@phosphor-icons/react";
+import { Terminal, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -23,8 +23,8 @@ export function AppHeader({
 }: AppHeaderProps) {
   return (
     <div className="flex items-center gap-2 sm:gap-3 text-foreground">
-      <Terminal size={20} weight="bold" className="sm:hidden" />
-      <Terminal size={24} weight="bold" className="hidden sm:block" />
+      <Terminal size={20} strokeWidth={2.5} className="sm:hidden" />
+      <Terminal size={24} strokeWidth={2.5} className="hidden sm:block" />
       <h1 className="text-lg sm:text-xl font-bold">{appStrings.app.title}</h1>
       <div className="ml-auto flex gap-1 sm:gap-2 items-center">
         {/* Theme Selector */}
