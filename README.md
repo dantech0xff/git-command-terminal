@@ -2,7 +2,7 @@
 
 An interactive terminal-style web application that teaches users Git commands through hands-on exploration and contextual learning. Perfect for developers who want to master Git in an authentic, engaging environment.
 
-![Git Command Terminal Screenshot](https://github.com/user-attachments/assets/65425df2-3bdb-4dda-947c-024c16b750a0)
+![Git Command Terminal Screenshot](https://github.com/user-attachments/assets/ab4155a9-5bae-40da-8d5b-8b148b621b45)
 
 ## ✨ Features
 
@@ -127,9 +127,10 @@ We welcome contributions! Here's how you can help improve the Git Command Termin
 - **Accessibility** - Help make the app more accessible to all users
 - **Performance** - Optimize loading times and interactions
 - **Documentation** - Improve guides and help content
-- **Review System** - Enhance the community feedback features in `/src/components/Review*.tsx`
+- **Review System** - Enhance the community feedback features in `/src/components/ReviewForm.tsx`, `/src/components/ReviewList.tsx`, and `/src/components/ReviewsSection.tsx`
 - **Network Simulation** - Improve the mock API system in `/src/services/api.ts`
 - **Configuration** - Enhance the string and network configuration systems in `/src/config/`
+- **Event Handlers** - Improve component interaction logic in `/src/handlers/`
 
 ### Code Standards
 - Use TypeScript for all new code
@@ -152,6 +153,7 @@ src/
 │   ├── CommandSuggestions.tsx # Related command suggestions
 │   ├── ReviewForm.tsx         # User review submission form
 │   ├── ReviewList.tsx         # Display user reviews
+│   ├── ReviewsSection.tsx     # Reviews container component
 │   ├── Testimonials.tsx       # Community testimonials
 │   ├── StarRating.tsx         # Star rating component
 │   ├── NetworkStatus.tsx      # Network activity indicator
@@ -163,11 +165,18 @@ src/
 │       ├── card.tsx          # Card components
 │       ├── input.tsx         # Input components
 │       ├── dialog.tsx        # Dialog components
-│       └── [40+ other UI components]
+│       ├── carousel.tsx      # Carousel for testimonials
+│       ├── scroll-area.tsx   # Scroll area for terminal
+│       ├── sonner.tsx        # Toast notifications
+│       └── [50+ other UI components]
 ├── config/              # Configuration and settings
 │   ├── strings.ts      # Centralized text content and labels
 │   ├── network.ts      # Network simulation configuration
 │   └── README.md       # Configuration system documentation
+├── handlers/            # Component event handlers
+│   ├── review-handlers.tsx   # Review system handlers
+│   ├── terminal-handlers.tsx # Terminal interaction handlers
+│   └── theme-handlers.tsx    # Theme switching handlers
 ├── hooks/              # Custom React hooks
 │   ├── useData.ts      # Data fetching and state management
 │   └── use-mobile.ts   # Mobile device detection
@@ -188,7 +197,6 @@ src/
 ├── ErrorFallback.tsx   # Error boundary component
 ├── index.css           # Global styles and custom CSS
 ├── main.css           # Additional styling
-├── prd.md             # Product Requirements Document
 └── vite-end.d.ts      # Vite environment type definitions
 ```
 
