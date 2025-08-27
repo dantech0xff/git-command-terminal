@@ -1,17 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useKV } from "@github/spark/hooks";
-import {
-  parseGitCommand,
-  gitCommands,
-  getCommandSuggestions,
-} from "@/lib/git-commands";
-import {
-  getCurrentTheme,
-  setCurrentTheme,
-  themes,
-  applyTheme,
-} from "@/lib/themes";
-import { toast, Toaster } from "sonner";
+import { Toaster } from "sonner";
 import { AppHeader } from "./components/AppHeader";
 import { TerminalSection } from "./components/TerminalSection";
 import { CommandDetails } from "./components/CommandDetails";
@@ -25,7 +14,10 @@ import { NetworkDemo } from "./components/NetworkDemo";
 import { TerminalEntry, Review, Testimonial } from "./types";
 import { useReviews, useAllTestimonials } from "./hooks/useData";
 import { isLocalhost } from "./utils/environment";
-import { appStrings, strings } from "./config/strings";
+import { appStrings } from "./config/strings";
+import { useThemeHandlers } from "./handlers/theme-handlers";
+import { useTerminalHandlers } from "./handlers/terminal-handlers";
+import { useReviewHandlers } from "./handlers/review-handlers";
 
 function App() {
   const [input, setInput] = useState("");
@@ -63,174 +55,39 @@ function App() {
     { loading: testimonialsLoading, error: testimonialsError }
   );
 
-  // Theme management
-  useEffect(() => {
-    const savedTheme = getCurrentTheme();
-    setCurrentThemeId(savedTheme);
-    const theme = themes.find((t) => t.id === savedTheme) || themes[0];
-    applyTheme(theme);
-  }, []);
+  // Use theme handlers
+  const { handleThemeChange } = useThemeHandlers({
+    currentThemeId,
+    setCurrentThemeId,
+  });
 
-  useEffect(() => {
-    const theme = themes.find((t) => t.id === currentThemeId) || themes[0];
-    applyTheme(theme);
-  }, [currentThemeId]);
+  // Use terminal handlers
+  const {
+    addEntry,
+    handleSubmit,
+    handleKeyDown,
+    handleSuggestionClick,
+    clearTerminal,
+  } = useTerminalHandlers({
+    input,
+    setInput,
+    entries,
+    setEntries,
+    commandHistory,
+    setCommandHistory,
+    historyIndex,
+    setHistoryIndex,
+    currentCommand,
+    setCurrentCommand,
+    suggestions,
+    setSuggestions,
+    inputRef,
+  });
 
-  const handleThemeChange = (themeId: string) => {
-    setCurrentThemeId(themeId);
-    setCurrentTheme(themeId);
-    const theme = themes.find((t) => t.id === themeId);
-    if (theme) {
-      toast.success(
-        strings.buildSuccessMessage("themeChanged", { themeName: theme.name })
-      );
-    }
-  };
-
-  // Terminal functionality
-  const addEntry = (type: TerminalEntry["type"], content: string) => {
-    const newEntry: TerminalEntry = {
-      id: Date.now().toString(),
-      type,
-      content,
-      timestamp: Date.now(),
-    };
-    setEntries((currentEntries) => [...(currentEntries ?? []), newEntry]);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-
-    // Check for clear command
-    if (input.trim().toLowerCase() === "clear") {
-      clearTerminal();
-      setInput("");
-      return;
-    }
-
-    // Add command to history
-    addEntry("command", `$ ${input}`);
-    setCommandHistory((currentHistory) => [...(currentHistory ?? []), input]);
-    setHistoryIndex(-1);
-
-    // Parse and process command
-    const command = parseGitCommand(input);
-
-    if (command && gitCommands[command]) {
-      const gitCmd = gitCommands[command];
-      setCurrentCommand(gitCmd);
-
-      // Add command output
-      addEntry(
-        "output",
-        `${appStrings.terminal.output.command}: ${gitCmd.command}`
-      );
-      addEntry(
-        "output",
-        `${appStrings.terminal.output.description}: ${gitCmd.description}`
-      );
-      addEntry(
-        "output",
-        `${appStrings.terminal.output.usage}: ${gitCmd.usage}`
-      );
-
-      if (gitCmd.examples.length > 0) {
-        addEntry("output", appStrings.terminal.output.examples);
-        gitCmd.examples.forEach((example: string) => {
-          addEntry("output", `  ${example}`);
-        });
-      }
-    } else {
-      setCurrentCommand(null);
-      addEntry(
-        "error",
-        `${appStrings.terminal.errors.commandNotFound}: ${input}`
-      );
-      addEntry("error", appStrings.terminal.errors.tryTheseCommands);
-      addEntry("error", `  ${appStrings.terminal.errors.commonCommands}`);
-
-      const suggestions = getCommandSuggestions(input);
-      if (suggestions.length > 0) {
-        addEntry("error", appStrings.terminal.errors.didYouMean);
-        suggestions.forEach((suggestion) => {
-          addEntry("error", `  ${suggestion}`);
-        });
-      }
-    }
-
-    setInput("");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      if (commandHistory && commandHistory.length > 0) {
-        const newIndex =
-          historyIndex === -1
-            ? commandHistory.length - 1
-            : Math.max(0, historyIndex - 1);
-        setHistoryIndex(newIndex);
-        setInput(commandHistory[newIndex] || "");
-      }
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      if (historyIndex >= 0 && commandHistory) {
-        const newIndex = historyIndex + 1;
-        if (newIndex >= commandHistory.length) {
-          setHistoryIndex(-1);
-          setInput("");
-        } else {
-          setHistoryIndex(newIndex);
-          setInput(commandHistory[newIndex] || "");
-        }
-      }
-    } else if (e.key === "Tab") {
-      e.preventDefault();
-      const suggestions = getCommandSuggestions(input);
-      if (suggestions.length > 0) {
-        setInput(suggestions[0]);
-      }
-    }
-  };
-
-  const handleSuggestionClick = (command: string) => {
-    setInput(command);
-    inputRef.current?.focus();
-  };
-
-  const clearTerminal = () => {
-    setEntries([]);
-    setCurrentCommand(null);
-  };
-
-  const handleReviewSubmit = async (review: Review) => {
-    try {
-      await submitReview({
-        name: review.name,
-        rating: review.rating,
-        comment: review.comment,
-      });
-    } catch (error) {
-      // Error is already handled in the hook
-      console.error("Failed to submit review:", error);
-    }
-  };
-
-  // Update suggestions
-  useEffect(() => {
-    let newSuggestions = getCommandSuggestions(input);
-
-    if (
-      !input.trim() &&
-      currentCommand &&
-      currentCommand.relatedCommands?.length > 0
-    ) {
-      newSuggestions = [...currentCommand.relatedCommands, ...newSuggestions];
-    }
-
-    setSuggestions(newSuggestions);
-  }, [input, currentCommand]);
+  // Use review handlers
+  const { handleReviewSubmit } = useReviewHandlers({
+    submitReview,
+  });
 
   return (
     <div className="min-h-screen bg-background p-2 sm:p-4">
