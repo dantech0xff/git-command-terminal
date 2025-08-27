@@ -35,7 +35,7 @@ export function AppHeader({
             className="text-muted-foreground hidden sm:block"
           />
           <Select value={currentThemeId} onValueChange={onThemeChange}>
-            <SelectTrigger className="w-28 sm:w-40 h-7 sm:h-8 text-xs theme-selector">
+            <SelectTrigger className="w-36 sm:w-40 h-7 sm:h-8 text-xs theme-selector">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
