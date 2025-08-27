@@ -86,11 +86,19 @@ export const appStrings = {
     prompt: "$",
     errors: {
       commandNotFound: "Command not found",
-      tryTheseCommands: "Try one of these common Git commands:",
-      commonCommands: "git init, git add, git commit, git push, git pull",
+      tryTheseCommands: "Try one of these commands:",
+      commonCommands:
+        "git init, git add, git commit, git push, git pull, git status, git log, git branch",
       didYouMean: "Did you mean:",
-      unknownError: "Unknown error",
-      reviewNotFound: "Review not found",
+      networkError: "Network connection failed",
+      serverError: "Server error occurred",
+    },
+    prompts: {
+      enterCommand: "Enter a git command...",
+      helpText: "Type any git command to learn how to use it",
+      welcomeMessage:
+        "Welcome to Git Command Terminal! We support 50+ official Git commands.",
+      exampleCommand: "Example: git init, git commit, git merge, git rebase",
     },
     output: {
       command: "Command",

@@ -51,10 +51,13 @@ export function TerminalDisplay({
               <div className="text-muted-foreground">
                 <p>Welcome to Git Command Terminal!</p>
                 <p className="hidden sm:block">
-                  Type a git command to learn how to use it.
+                  Type any git command to learn how to use it. We support 50+
+                  official Git commands!
                 </p>
-                <p className="sm:hidden">Type git commands to learn</p>
-                <p>Example: git init</p>
+                <p className="sm:hidden">
+                  Type git commands to learn (50+ supported)
+                </p>
+                <p>Examples: git init, git commit, git merge, git rebase</p>
               </div>
             )}
 
