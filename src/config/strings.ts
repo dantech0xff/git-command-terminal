@@ -189,7 +189,7 @@ export const appStrings = {
     copyright: "© {year} Git Command Terminal",
     builtBy: "Built by Dan",
     tagline: "Passionate about making Git accessible to everyone",
-    visitBlog: "Visit My Blog",
+    visitBlog: "Dan Tech Academy",
     blogUrl: "https://dantech.academy",
     madeWith: "Made with ❤️ for developers",
     version: "Version {version}",
