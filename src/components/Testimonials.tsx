@@ -41,7 +41,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
             </div>
 
             <p className="text-xs sm:text-sm text-card-foreground leading-relaxed">
-              "{testimonial.comment}"
+              {testimonial.comment}
             </p>
           </Card>
         ))}

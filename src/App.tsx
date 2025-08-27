@@ -17,8 +17,7 @@ import { TerminalSection } from "./components/TerminalSection";
 import { CommandDetails } from "./components/CommandDetails";
 import { HelpTips } from "./components/HelpTips";
 import { Testimonials } from "./components/Testimonials";
-import { ReviewForm } from "./components/ReviewForm";
-import { ReviewList } from "./components/ReviewList";
+import { ReviewsSection } from "./components/ReviewsSection";
 import { AppFooter } from "./components/AppFooter";
 import { LoadingState, ErrorState } from "./components/LoadingStates";
 import { NetworkStatus, useNetworkStatus } from "./components/NetworkStatus";
@@ -39,7 +38,6 @@ function App() {
   const [currentCommand, setCurrentCommand] = useState<any>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [currentThemeId, setCurrentThemeId] = useState("matrix");
-  const [showReviewForm, setShowReviewForm] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -206,7 +204,6 @@ function App() {
         rating: review.rating,
         comment: review.comment,
       });
-      setShowReviewForm(false);
     } catch (error) {
       // Error is already handled in the hook
       console.error("Failed to submit review:", error);
@@ -278,44 +275,12 @@ function App() {
           <Testimonials testimonials={allTestimonials} />
         )}
 
-        <div className="mt-8 sm:mt-12">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1 sm:mb-2">
-                {appStrings.sections.reviews.title}
-              </h2>
-              <p className="text-sm sm:text-base text-muted-foreground">
-                {appStrings.sections.reviews.subtitle}
-              </p>
-            </div>
-            <button
-              onClick={() => setShowReviewForm(!showReviewForm)}
-              className="flex items-center gap-2 text-sm px-3 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
-              {appStrings.ui.buttons.leaveReview}
-            </button>
-          </div>
-
-          {showReviewForm && (
-            <ReviewForm
-              onSubmit={handleReviewSubmit}
-              onCancel={() => setShowReviewForm(false)}
-            />
-          )}
-
-          {reviewsLoading ? (
-            <LoadingState
-              title={appStrings.loading.reviews.title}
-              description={appStrings.loading.reviews.description}
-            />
-          ) : reviewsError ? (
-            <ErrorState
-              title={appStrings.errors.reviews.title}
-              description={reviewsError}
-            />
-          ) : (
-            <ReviewList reviews={reviews || []} />
-          )}
-        </div>
+        {/* <ReviewsSection
+          reviews={reviews}
+          reviewsLoading={reviewsLoading}
+          reviewsError={reviewsError}
+          onSubmitReview={handleReviewSubmit}
+        /> */}
 
         <AppFooter />
       </div>

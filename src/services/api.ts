@@ -9,37 +9,37 @@ import { appStrings } from "@/config/strings";
 
 // Mock data that was previously in App.tsx
 const mockReviews: Review[] = [
-  {
-    id: "demo-1",
-    name: "Jordan Smith",
-    rating: 5,
-    comment:
-      "This is exactly what I needed to finally understand Git! The terminal interface makes it feel like real practice.",
-    timestamp: Date.now() - 86400000 * 2, // 2 days ago
-  },
-  {
-    id: "demo-2",
-    name: "Taylor Johnson",
-    rating: 4,
-    comment:
-      "Great tool for learning. Would love to see more advanced Git workflows covered in the future.",
-    timestamp: Date.now() - 86400000 * 5, // 5 days ago
-  },
+  //   {
+  //     id: "demo-1",
+  //     name: "Jordan Smith",
+  //     rating: 5,
+  //     comment:
+  //       "This is exactly what I needed to finally understand Git! The terminal interface makes it feel like real practice.",
+  //     timestamp: Date.now() - 86400000 * 2, // 2 days ago
+  //   },
+  //   {
+  //     id: "demo-2",
+  //     name: "Taylor Johnson",
+  //     rating: 4,
+  //     comment:
+  //       "Great tool for learning. Would love to see more advanced Git workflows covered in the future.",
+  //     timestamp: Date.now() - 86400000 * 5, // 5 days ago
+  //   },
 ];
 
 const mockTestimonials: Testimonial[] = [
   {
     id: "1",
-    name: "Sarah Chen",
+    name: "Dan Tech",
     role: appStrings.community.roles.juniorDeveloper,
     rating: 5,
     comment:
       "This terminal helped me learn Git commands so much faster! The interactive approach makes it easy to understand what each command does.",
-    avatar: "👩‍💻",
+    avatar: "🗽",
   },
   {
     id: "2",
-    name: "Mike Rodriguez",
+    name: "0xFF",
     role: appStrings.community.roles.student,
     rating: 5,
     comment:
@@ -48,7 +48,7 @@ const mockTestimonials: Testimonial[] = [
   },
   {
     id: "3",
-    name: "Alex Kim",
+    name: "Huu Danh Tran",
     role: appStrings.community.roles.bootcampGraduate,
     rating: 4,
     comment:
