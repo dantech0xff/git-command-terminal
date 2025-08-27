@@ -84,11 +84,6 @@ function App() {
     inputRef,
   });
 
-  // Use review handlers
-  const { handleReviewSubmit } = useReviewHandlers({
-    submitReview,
-  });
-
   return (
     <div className="min-h-screen bg-background p-2 sm:p-4">
       {/* Network Status Indicator - only show in localhost mode */}
