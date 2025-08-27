@@ -186,7 +186,11 @@ export const appStrings = {
 
   // Footer content
   footer: {
-    copyright: "© 2025 Git Command Terminal",
+    copyright: "© {year} Git Command Terminal",
+    builtBy: "Built by Dan",
+    tagline: "Passionate about making Git accessible to everyone",
+    visitBlog: "Visit My Blog",
+    blogUrl: "https://dantech.academy",
     madeWith: "Made with ❤️ for developers",
     version: "Version {version}",
     links: {
