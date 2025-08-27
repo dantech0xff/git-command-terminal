@@ -21,7 +21,7 @@ export function CommandSuggestions({
           <button
             key={suggestion}
             onClick={() => onSuggestionClick(suggestion)}
-            className="text-accent hover:text-accent-foreground underline suggestion-link bg-muted/30 px-2 py-1 rounded text-xs">
+            className="text-accent cursor-pointer underline suggestion-link bg-muted/30 px-2 py-1 rounded text-xs hover:bg-muted/50 transition-colors">
             {suggestion}
           </button>
         ))}

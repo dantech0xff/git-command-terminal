@@ -1,9 +1,9 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 @import "tw-animate-css";
 
 @layer base {
   * {
-    @apply border-border
+    @apply border-border;
   }
 }
 
@@ -62,11 +62,11 @@
   --radius-2xl: calc(var(--radius) * 3);
   --radius-full: 9999px;
 
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-mono: "JetBrains Mono", monospace;
 }
 
 body {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -79,12 +79,19 @@ body {
 }
 
 @keyframes blink {
-  from, to { opacity: 1; }
-  50% { opacity: 0; }
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 /* Custom cursor styles for clickable elements */
-button, .cursor-pointer, [role="button"] {
+button,
+.cursor-pointer,
+[role="button"] {
   cursor: pointer;
 }
 
@@ -93,9 +100,11 @@ button, .cursor-pointer, [role="button"] {
   .terminal-cursor {
     animation: none; /* Reduce animation on mobile for better performance */
   }
-  
+
   /* Better touch targets for mobile */
-  button, .cursor-pointer, [role="button"] {
+  button,
+  .cursor-pointer,
+  [role="button"] {
     min-height: 44px;
     min-width: 44px;
   }
@@ -106,22 +115,25 @@ button, .cursor-pointer, [role="button"] {
   -webkit-overflow-scrolling: touch;
 }
 
-a, a:hover {
-  cursor: alias;
+a,
+a:hover {
+  cursor: pointer;
 }
 
 .suggestion-link {
-  cursor: crosshair;
+  cursor: pointer;
 }
 
-input, textarea, [contenteditable] {
+input,
+textarea,
+[contenteditable] {
   cursor: text;
 }
 
 .copy-button {
-  cursor: copy;
+  cursor: pointer;
 }
 
 .theme-selector {
-  cursor: context-menu;
+  cursor: pointer;
 }
