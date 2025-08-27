@@ -102,6 +102,13 @@ function App() {
     e.preventDefault();
     if (!input.trim()) return;
 
+    // Check for clear command
+    if (input.trim().toLowerCase() === "clear") {
+      clearTerminal();
+      setInput("");
+      return;
+    }
+
     // Add command to history
     addEntry("command", `$ ${input}`);
     setCommandHistory((currentHistory) => [...(currentHistory ?? []), input]);
