@@ -4,7 +4,6 @@ import "@github/spark/spark";
 
 import App from "./App.tsx";
 import { ErrorFallback } from "./ErrorFallback.tsx";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import "./main.css";
 import "./index.css";
@@ -12,6 +11,5 @@ import "./index.css";
 createRoot(document.getElementById("root")!).render(
   <ErrorBoundary FallbackComponent={ErrorFallback}>
     <App />
-    <SpeedInsights />
   </ErrorBoundary>
 );

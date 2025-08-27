@@ -17,6 +17,8 @@ import { isLocalhost } from "./utils/environment";
 import { appStrings } from "./config/strings";
 import { useThemeHandlers } from "./handlers/theme-handlers";
 import { useTerminalHandlers } from "./handlers/terminal-handlers";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   const [input, setInput] = useState("");
@@ -151,6 +153,8 @@ function App() {
           },
         }}
       />
+      <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
