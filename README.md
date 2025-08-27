@@ -20,11 +20,13 @@ An interactive terminal-style web application that teaches users Git commands th
 ## 🛠️ Technologies Used
 
 ### Frontend
+
 - **React 19** with TypeScript for modern, type-safe development
 - **Vite 6** for lightning-fast development and building
 - **Tailwind CSS 4** for utility-first styling with excellent DX
 
 ### UI & Design
+
 - **Radix UI** components for accessible, high-quality primitives
 - **Radix Colors** for consistent, beautiful color systems
 - **JetBrains Mono** font for authentic terminal typography
@@ -33,6 +35,7 @@ An interactive terminal-style web application that teaches users Git commands th
 - **Sonner** for elegant toast notifications
 
 ### Development Tools
+
 - **ESLint** with TypeScript support for code quality
 - **GitHub Spark** for state management and KV storage
 - **PostCSS** with Tailwind for CSS processing
@@ -40,23 +43,27 @@ An interactive terminal-style web application that teaches users Git commands th
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn package manager
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/dantech0xff/git-command-terminal.git
    cd git-command-terminal
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Start the development server**
+
    ```bash
    npm run dev
    ```
@@ -91,14 +98,16 @@ npm run kill     # Kill process on port 5000 (if needed)
 8. **Your progress is saved** automatically between sessions
 
 ### Available Themes
+
 - **Matrix Terminal** - Classic green-on-black hacker aesthetic
 - **Oceanic Blue** - Calming blue tones for extended sessions
-- **Sunset Orange** - Warm orange gradients for a cozy feel  
+- **Sunset Orange** - Warm orange gradients for a cozy feel
 - **Midnight Purple** - Deep purple theme for night coding
 - **Light Terminal** - Clean light theme for bright environments
 - **Neon Cyberpunk** - Vibrant neon colors for a futuristic experience
 
 ### Example Commands to Try
+
 - `git init` - Initialize a new repository
 - `git add` - Stage changes for commit
 - `git commit` - Save changes to repository
@@ -110,6 +119,7 @@ npm run kill     # Kill process on port 5000 (if needed)
 We welcome contributions! Here's how you can help improve the Git Command Terminal:
 
 ### Development Setup
+
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Make your changes following our coding standards
@@ -120,6 +130,7 @@ We welcome contributions! Here's how you can help improve the Git Command Termin
 8. Open a Pull Request
 
 ### Areas for Contribution
+
 - **New Git Commands** - Add support for additional Git commands in `/src/lib/git-commands.ts`
 - **UI Improvements** - Enhance the terminal interface and user experience
 - **Theme Development** - Create new color themes in `/src/lib/themes.ts`
@@ -133,6 +144,7 @@ We welcome contributions! Here's how you can help improve the Git Command Termin
 - **Event Handlers** - Improve component interaction logic in `/src/handlers/`
 
 ### Code Standards
+
 - Use TypeScript for all new code
 - Follow existing code style and patterns
 - Write meaningful commit messages
@@ -203,18 +215,22 @@ src/
 ### Key Architecture Features
 
 #### Network Simulation System
+
 The application includes a sophisticated network simulation system that prepares it for real-world deployment:
+
 - **Mock API Layer** (`/src/services/api.ts`) - Simulates REST endpoints with realistic delays
 - **Network Configuration** (`/src/config/network.ts`) - Configurable response times and error rates
 - **Loading States** - Comprehensive loading and error handling throughout the UI
 - **Development Tools** - Network demo widget for testing various network conditions
 
 #### Configuration Management
+
 - **Centralized Strings** (`/src/config/strings.ts`) - All user-facing text in one location for easy localization
 - **Type-Safe Configuration** - Strongly typed configuration with IntelliSense support
 - **Environment Detection** (`/src/utils/environment.ts`) - Smart environment-specific features
 
 #### Component Architecture
+
 - **Atomic Design** - Reusable UI components built on Radix UI primitives
 - **Custom Hooks** - Dedicated hooks for data fetching and mobile detection
 - **Error Boundaries** - Graceful error handling with fallback components
@@ -228,7 +244,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Built with [GitHub Spark](https://github.com/github/spark) for rapid development
+- Built with [GitHub Spark](https://github.com/github/spark-template) for rapid development
 - UI components powered by [Radix UI](https://www.radix-ui.com/)
 - Icons from [Phosphor Icons](https://phosphoricons.com/)
 - Inspired by the need for better Git education tools
