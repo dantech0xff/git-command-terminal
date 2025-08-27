@@ -17,7 +17,6 @@ import { isLocalhost } from "./utils/environment";
 import { appStrings } from "./config/strings";
 import { useThemeHandlers } from "./handlers/theme-handlers";
 import { useTerminalHandlers } from "./handlers/terminal-handlers";
-import { useReviewHandlers } from "./handlers/review-handlers";
 
 function App() {
   const [input, setInput] = useState("");
@@ -82,6 +81,7 @@ function App() {
     suggestions,
     setSuggestions,
     inputRef,
+    scrollRef,
   });
 
   return (
@@ -133,13 +133,6 @@ function App() {
         ) : (
           <Testimonials testimonials={allTestimonials} />
         )}
-
-        {/* <ReviewsSection
-          reviews={reviews}
-          reviewsLoading={reviewsLoading}
-          reviewsError={reviewsError}
-          onSubmitReview={handleReviewSubmit}
-        /> */}
 
         <AppFooter />
       </div>

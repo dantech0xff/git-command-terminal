@@ -10,15 +10,15 @@ import { appStrings } from "@/config/strings";
 interface UseTerminalHandlersProps {
   input: string;
   setInput: (input: string) => void;
-  entries: TerminalEntry[];
+  entries: TerminalEntry[] | undefined;
   setEntries: (
-    entries:
+    newValue:
       | TerminalEntry[]
-      | ((current: TerminalEntry[] | null) => TerminalEntry[])
+      | ((oldValue?: TerminalEntry[] | undefined) => TerminalEntry[])
   ) => void;
-  commandHistory: string[];
+  commandHistory: string[] | undefined;
   setCommandHistory: (
-    history: string[] | ((current: string[] | null) => string[])
+    newValue: string[] | ((oldValue?: string[] | undefined) => string[])
   ) => void;
   historyIndex: number;
   setHistoryIndex: (index: number) => void;
@@ -26,7 +26,8 @@ interface UseTerminalHandlersProps {
   setCurrentCommand: (command: any) => void;
   suggestions: string[];
   setSuggestions: (suggestions: string[]) => void;
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export function useTerminalHandlers({
