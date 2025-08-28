@@ -1,5 +1,6 @@
 import { Code, Globe } from "lucide-react";
 import { appStrings, interpolateString } from "@/config/strings";
+import { GitHubButtons } from "@/components/GitHubButtons";
 
 export function AppFooter() {
   const currentYear = new Date().getFullYear();
@@ -23,6 +24,7 @@ export function AppFooter() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+          <GitHubButtons />
           <iframe
             src="https://github.com/sponsors/dantech0xff/button"
             title="Sponsor dantech0xff"

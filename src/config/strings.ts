@@ -201,6 +201,11 @@ export const appStrings = {
     blogUrl: "https://dantech.academy",
     madeWith: "Made with ❤️ for developers",
     version: "Version {version}",
+    github: {
+      repositoryUrl: "https://github.com/dantech0xff/git-command-terminal",
+      starText: "Star",
+      forkText: "Fork",
+    },
     links: {
       github: "GitHub",
       documentation: "Documentation",
