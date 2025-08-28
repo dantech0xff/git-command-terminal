@@ -41,34 +41,46 @@ export function GitHubButtons() {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      {/* Star Button */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleStarClick}
-        className="flex items-center gap-1.5 text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground"
-        disabled={loading}
-      >
-        <Star size={14} className="fill-current" />
-        <span className="hidden sm:inline">{appStrings.footer.github.starText}</span>
-        {starCount !== null && (
-          <span className="bg-muted px-1.5 py-0.5 rounded text-xs ml-1">
-            {starCount}
-          </span>
-        )}
-      </Button>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center gap-2">
+        {/* Star Button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleStarClick}
+          className="flex items-center gap-1.5 text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground"
+          disabled={loading}
+        >
+          <Star size={14} className="fill-current" />
+          <span className="hidden sm:inline">{appStrings.footer.github.starText}</span>
+          {starCount !== null && (
+            <span className="bg-muted px-1.5 py-0.5 rounded text-xs ml-1">
+              {starCount}
+            </span>
+          )}
+        </Button>
 
-      {/* Fork Button */}
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleForkClick}
-        className="flex items-center gap-1.5 text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground"
-      >
-        <GitFork size={14} />
-        <span className="hidden sm:inline">{appStrings.footer.github.forkText}</span>
-      </Button>
+        {/* Fork Button */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleForkClick}
+          className="flex items-center gap-1.5 text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground"
+        >
+          <GitFork size={14} />
+          <span className="hidden sm:inline">{appStrings.footer.github.forkText}</span>
+        </Button>
+      </div>
+
+      {/* Sponsor Button */}
+      <iframe
+        src="https://github.com/sponsors/dantech0xff/button"
+        title="Sponsor dantech0xff"
+        height="32"
+        width="114"
+        style={{ border: 0, borderRadius: '6px' }}
+        className="mx-auto"
+      />
     </div>
   );
 }

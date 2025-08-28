@@ -5,6 +5,7 @@ import { AppHeader } from "./components/AppHeader";
 import { TerminalSection } from "./components/TerminalSection";
 import { CommandDetails } from "./components/CommandDetails";
 import { HelpTips } from "./components/HelpTips";
+import { GitHubButtons } from "./components/GitHubButtons";
 import { Testimonials } from "./components/Testimonials";
 import { ReviewsSection } from "./components/ReviewsSection";
 import { AppFooter } from "./components/AppFooter";
@@ -119,6 +120,7 @@ function App() {
           <div className="space-y-4">
             {currentCommand && <CommandDetails command={currentCommand} />}
             <HelpTips />
+            <GitHubButtons />
           </div>
         </div>
 
