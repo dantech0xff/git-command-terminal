@@ -11,6 +11,29 @@ export const appStrings = {
     version: "1.0.0",
   },
 
+  // SEO metadata
+  seo: {
+    title: "Git Command Terminal - Master Git Commands Interactively",
+    description: "Learn Git commands through an interactive terminal experience. Practice Git workflows, explore command relationships, and master version control with hands-on tutorials and community reviews.",
+    keywords: "git commands, learn git, git tutorial, interactive git, version control, git workflow, developer tools, programming education",
+    author: "Dan Tech Academy",
+    url: "https://git-command-terminal.vercel.app",
+    siteName: "Git Command Terminal",
+    locale: "en_US",
+    type: "website",
+    image: {
+      url: "https://git-command-terminal.vercel.app/og-image.png",
+      alt: "Git Command Terminal - Interactive Git Learning Tool",
+      width: 1200,
+      height: 630,
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: "@dantech0xff",
+      creator: "@dantech0xff",
+    },
+  },
+
   // UI Labels and Buttons
   ui: {
     buttons: {
