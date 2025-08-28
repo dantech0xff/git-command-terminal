@@ -51,7 +51,7 @@ export function AppHeader({
           variant="outline"
           size="sm"
           onClick={onClearTerminal}
-          className="text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground">
+          className="hidden text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground">
           {appStrings.ui.buttons.clear}
         </Button>
       </div>
