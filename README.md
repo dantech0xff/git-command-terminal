@@ -238,6 +238,10 @@ The application includes a sophisticated network simulation system that prepares
 
 See [NETWORK_SIMULATION.md](NETWORK_SIMULATION.md) and [src/config/README.md](src/config/README.md) for detailed documentation.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=dantech0xff/git-command-terminal&type=Date)](https://www.star-history.com/#dantech0xff/git-command-terminal&Date)
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
