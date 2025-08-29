@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useKV } from "@github/spark/hooks";
 import { Toaster } from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 import { AppHeader } from "./components/AppHeader";
 import { TerminalSection } from "./components/TerminalSection";
 import { CommandDetails } from "./components/CommandDetails";
@@ -32,6 +33,8 @@ function App() {
   const [currentCommand, setCurrentCommand] = useState<any>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [currentThemeId, setCurrentThemeId] = useState("matrix");
+  const [showTerminal, setShowTerminal] = useState(true);
+  const [showInfoPanel, setShowInfoPanel] = useState(true);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -102,26 +105,50 @@ function App() {
           currentThemeId={currentThemeId}
           onThemeChange={handleThemeChange}
           onClearTerminal={clearTerminal}
+          showTerminal={showTerminal}
+          showInfoPanel={showInfoPanel}
+          onToggleTerminal={() => setShowTerminal(!showTerminal)}
+          onToggleInfoPanel={() => setShowInfoPanel(!showInfoPanel)}
         />
 
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-          <TerminalSection
-            entries={entries}
-            input={input}
-            suggestions={suggestions}
-            inputRef={inputRef}
-            scrollRef={scrollRef}
-            onInputChange={setInput}
-            onSubmit={handleSubmit}
-            onKeyDown={handleKeyDown}
-            onSuggestionClick={handleSuggestionClick}
-          />
+        <div className={`grid gap-4 ${
+          showTerminal && showInfoPanel
+            ? "grid-cols-1 xl:grid-cols-3"
+            : "grid-cols-1"
+        }`}>
+          {showTerminal && (
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className={showInfoPanel ? "xl:col-span-2" : "col-span-full"}>
+              <TerminalSection
+                entries={entries}
+                input={input}
+                suggestions={suggestions}
+                inputRef={inputRef}
+                scrollRef={scrollRef}
+                onInputChange={setInput}
+                onSubmit={handleSubmit}
+                onKeyDown={handleKeyDown}
+                onSuggestionClick={handleSuggestionClick}
+              />
+            </motion.div>
+          )}
 
-          <div className="space-y-4">
-            {currentCommand && <CommandDetails command={currentCommand} />}
-            <HelpTips />
-            <GitHubButtons />
-          </div>
+          {showInfoPanel && (
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="space-y-4">
+              {currentCommand && <CommandDetails command={currentCommand} />}
+              <HelpTips />
+              <GitHubButtons />
+            </motion.div>
+          )}
         </div>
 
         {testimonialsLoading ? (
