@@ -104,7 +104,6 @@ function App() {
         <AppHeader
           currentThemeId={currentThemeId}
           onThemeChange={handleThemeChange}
-          onClearTerminal={clearTerminal}
           showTerminal={showTerminal}
           showInfoPanel={showInfoPanel}
           onToggleTerminal={() => setShowTerminal(!showTerminal)}

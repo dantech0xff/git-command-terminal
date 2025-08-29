@@ -13,7 +13,6 @@ import { appStrings } from "@/config/strings";
 interface AppHeaderProps {
   currentThemeId: string;
   onThemeChange: (themeId: string) => void;
-  onClearTerminal: () => void;
   showTerminal: boolean;
   showInfoPanel: boolean;
   onToggleTerminal: () => void;
@@ -23,7 +22,6 @@ interface AppHeaderProps {
 export function AppHeader({
   currentThemeId,
   onThemeChange,
-  onClearTerminal,
   showTerminal,
   showInfoPanel,
   onToggleTerminal,
@@ -75,13 +73,6 @@ export function AppHeader({
             </SelectContent>
           </Select>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onClearTerminal}
-          className="hidden sm:flex text-xs px-2 sm:px-3 py-1 h-7 sm:h-8 hover:text-foreground">
-          {appStrings.ui.buttons.clear}
-        </Button>
       </div>
     </div>
   );
