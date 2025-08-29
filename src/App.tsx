@@ -144,7 +144,18 @@ function App() {
               exit={{ opacity: 0, x: 50 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
               className="space-y-4">
-              {currentCommand && <CommandDetails command={currentCommand} />}
+              <AnimatePresence mode="wait">
+                {currentCommand && (
+                  <motion.div
+                    key="command-details"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}>
+                    <CommandDetails command={currentCommand} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <HelpTips />
               <GitHubButtons />
             </motion.div>
