@@ -156,7 +156,11 @@ function App() {
                   </motion.div>
                 )}
               </AnimatePresence>
-              <HelpTips />
+              <motion.div
+                layout
+                transition={{ duration: 0.3, ease: "easeOut" }}>
+                <HelpTips />
+              </motion.div>
               <GitHubButtons />
             </motion.div>
           )}
