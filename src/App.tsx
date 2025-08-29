@@ -158,7 +158,13 @@ function App() {
               </AnimatePresence>
               <motion.div
                 layout
-                transition={{ duration: 0.3, ease: "easeOut" }}>
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.3, 
+                  ease: "easeOut",
+                  layout: { duration: 0.4, ease: "easeInOut" }
+                }}>
                 <HelpTips />
               </motion.div>
               <GitHubButtons />
