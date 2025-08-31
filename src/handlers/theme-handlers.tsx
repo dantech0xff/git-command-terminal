@@ -13,14 +13,17 @@ interface UseThemeHandlersProps {
   setCurrentThemeId: (themeId: string) => void;
 }
 
-export function useThemeHandlers({ currentThemeId, setCurrentThemeId }: UseThemeHandlersProps) {
+export function useThemeHandlers({
+  currentThemeId,
+  setCurrentThemeId,
+}: UseThemeHandlersProps) {
   // Theme management effects
   useEffect(() => {
     const savedTheme = getCurrentTheme();
     setCurrentThemeId(savedTheme);
     const theme = themes.find((t) => t.id === savedTheme) || themes[0];
     applyTheme(theme);
-  }, [setCurrentThemeId]);
+  });
 
   useEffect(() => {
     const theme = themes.find((t) => t.id === currentThemeId) || themes[0];
