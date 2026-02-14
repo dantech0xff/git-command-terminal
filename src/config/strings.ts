@@ -89,6 +89,18 @@ export const appStrings = {
       title: "Tips",
       subtitle: "Helpful shortcuts and features",
     },
+    learningPath: {
+      title: "Learning Paths",
+      subtitle: "Structured curriculum to master Git step by step",
+    },
+    quiz: {
+      title: "Git Quiz",
+      subtitle: "Test your Git knowledge",
+    },
+    progress: {
+      title: "Your Progress",
+      subtitle: "Track your learning journey",
+    },
   },
 
   // Help tips and instructions
@@ -101,6 +113,53 @@ export const appStrings = {
       relatedCommandsMobile: "Click suggestions",
       persistence: "Your history is saved between sessions",
       persistenceMobile: "History is saved",
+    },
+  },
+
+  // Learning platform
+  learning: {
+    difficulty: {
+      beginner: "Beginner",
+      intermediate: "Intermediate",
+      advanced: "Advanced",
+    },
+    quiz: {
+      startQuiz: "Start Quiz",
+      nextQuestion: "Next",
+      showResults: "Show Results",
+      tryAgain: "Try Again",
+      correct: "Correct!",
+      incorrect: "Incorrect",
+      score: "Score: {score}/{total}",
+      questionOf: "Question {current} of {total}",
+      selectDifficulty: "Select difficulty to begin",
+      explanation: "Explanation",
+      relatedCommand: "Related Command",
+      quizComplete: "Quiz Complete!",
+      greatJob: "Great job! You scored {score} out of {total}.",
+      keepPracticing: "Keep practicing! Try the terminal to reinforce your learning.",
+    },
+    paths: {
+      explore: "Explore",
+      tryCommand: "Try in Terminal",
+      topicsCount: "{count} topics",
+      commandsCount: "{count} commands",
+      completed: "Completed",
+      inProgress: "In Progress",
+      notStarted: "Not Started",
+    },
+    progress: {
+      commandsExplored: "Commands Explored",
+      quizzesTaken: "Quizzes Completed",
+      topicsCompleted: "Topics Completed",
+      totalCommands: "of {total} commands",
+      keepGoing: "Keep exploring commands in the terminal!",
+      noProgress: "Start exploring Git commands to track your progress.",
+    },
+    tabs: {
+      terminal: "Terminal",
+      learn: "Learn",
+      quiz: "Quiz",
     },
   },
 
