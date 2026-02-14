@@ -76,13 +76,13 @@ export function QuizMode({ onQuizComplete, onTryCommand }: QuizModeProps) {
   const handleNext = useCallback(() => {
     if (currentIdx + 1 >= questions.length) {
       setPhase("complete");
-      onQuizComplete(difficulty, score + (selectedAnswer === questions[currentIdx].correctAnswer ? 0 : 0), questions.length);
+      onQuizComplete(difficulty, score, questions.length);
     } else {
       setCurrentIdx((i) => i + 1);
       setSelectedAnswer(null);
       setPhase("question");
     }
-  }, [currentIdx, questions, difficulty, score, selectedAnswer, onQuizComplete]);
+  }, [currentIdx, questions, difficulty, score, onQuizComplete]);
 
   const resetQuiz = useCallback(() => {
     setPhase("select");
@@ -266,6 +266,8 @@ function QuestionCard({
       {showResult && (
         <div className="space-y-3">
           <div
+            role="note"
+            aria-label={appStrings.learning.quiz.explanation}
             className={`p-2.5 sm:p-3 rounded-lg text-xs sm:text-sm ${
               selectedAnswer === question.correctAnswer
                 ? "bg-green-500/10 border border-green-500/30 text-green-400"

@@ -9,6 +9,8 @@ interface LearningProgressProps {
   progress: LearningProgressType;
 }
 
+const MAX_RECENT_QUIZZES = 5;
+
 export function LearningProgressCard({ progress }: LearningProgressProps) {
   const totalCommands = getCommandCount();
   const exploredCount = progress.commandsExplored.length;
@@ -75,7 +77,7 @@ export function LearningProgressCard({ progress }: LearningProgressProps) {
           <div className="space-y-1">
             <div className="text-xs text-muted-foreground">Recent quizzes:</div>
             <div className="flex flex-wrap gap-1">
-              {progress.quizScores.slice(-5).map((qs, i) => (
+              {progress.quizScores.slice(-MAX_RECENT_QUIZZES).map((qs, i) => (
                 <span
                   key={i}
                   className={`text-xs px-1.5 py-0.5 rounded border ${
