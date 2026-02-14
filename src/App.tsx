@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useKV } from "@github/spark/hooks";
 import { Toaster } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,7 +13,10 @@ import { AppFooter } from "./components/AppFooter";
 import { LoadingState, ErrorState } from "./components/LoadingStates";
 import { NetworkStatus, useNetworkStatus } from "./components/NetworkStatus";
 import { NetworkDemo } from "./components/NetworkDemo";
-import { TerminalEntry, Review, Testimonial } from "./types";
+import { LearningPathSection } from "./components/LearningPath";
+import { QuizMode } from "./components/QuizMode";
+import { LearningProgressCard } from "./components/LearningProgress";
+import { TerminalEntry, Review, Testimonial, LearningProgress, DifficultyLevel } from "./types";
 import { useReviews, useAllTestimonials } from "./hooks/useData";
 import { isLocalhost } from "./utils/environment";
 import { appStrings } from "./config/strings";
@@ -35,6 +38,11 @@ function App() {
   const [currentThemeId, setCurrentThemeId] = useState("matrix");
   const [showTerminal, setShowTerminal] = useState(true);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
+  const [activeTab, setActiveTab] = useState<"terminal" | "learn" | "quiz">("terminal");
+  const [learningProgress, setLearningProgress] = useKV<LearningProgress>(
+    "learning-progress",
+    { commandsExplored: [], quizScores: [], completedTopics: [] }
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -90,6 +98,58 @@ function App() {
     scrollRef,
   });
 
+  // Track commands explored for learning progress
+  const trackCommandExplored = useCallback(
+    (command: string) => {
+      if (
+        learningProgress &&
+        !learningProgress.commandsExplored.includes(command)
+      ) {
+        setLearningProgress({
+          ...learningProgress,
+          commandsExplored: [...learningProgress.commandsExplored, command],
+        });
+      }
+    },
+    [learningProgress, setLearningProgress]
+  );
+
+  // Handle quiz completion
+  const handleQuizComplete = useCallback(
+    (difficulty: DifficultyLevel, score: number, total: number) => {
+      if (learningProgress) {
+        setLearningProgress({
+          ...learningProgress,
+          quizScores: [
+            ...learningProgress.quizScores,
+            { difficulty, score, total, timestamp: Date.now() },
+          ],
+        });
+      }
+    },
+    [learningProgress, setLearningProgress]
+  );
+
+  // Handle "Try in Terminal" from learning/quiz
+  const handleTryCommand = useCallback(
+    (command: string) => {
+      setActiveTab("terminal");
+      setShowTerminal(true);
+      setInput(command);
+      trackCommandExplored(command);
+      setTimeout(() => inputRef.current?.focus(), 100);
+    },
+    [setInput, trackCommandExplored]
+  );
+
+  // Track when a command is submitted in terminal
+  const handleTerminalSubmit = useCallback(() => {
+    if (input.trim()) {
+      trackCommandExplored(input.trim());
+    }
+    handleSubmit();
+  }, [input, trackCommandExplored, handleSubmit]);
+
   return (
     <div className="min-h-screen bg-background p-2 sm:p-4">
       {/* Network Status Indicator - only show in localhost mode */}
@@ -110,60 +170,122 @@ function App() {
           onToggleInfoPanel={() => setShowInfoPanel(!showInfoPanel)}
         />
 
-        <div className={`grid gap-4 ${
-          showTerminal && showInfoPanel
-            ? "grid-cols-1 xl:grid-cols-3"
-            : "grid-cols-1"
-        }`}>
-          {showTerminal && (
+        {/* Learning Mode Tabs */}
+        <div className="flex gap-1 bg-muted/30 p-1 rounded-lg border border-border">
+          {(["terminal", "learn", "quiz"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-md transition-colors ${
+                activeTab === tab
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              }`}
+            >
+              {appStrings.learning.tabs[tab]}
+            </button>
+          ))}
+        </div>
+
+        <AnimatePresence mode="wait">
+          {activeTab === "terminal" && (
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className={showInfoPanel ? "xl:col-span-2" : "col-span-full"}>
-              <TerminalSection
-                entries={entries}
-                input={input}
-                suggestions={suggestions}
-                inputRef={inputRef}
-                scrollRef={scrollRef}
-                onInputChange={setInput}
-                onSubmit={handleSubmit}
-                onKeyDown={handleKeyDown}
-                onSuggestionClick={handleSuggestionClick}
+              key="terminal-tab"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className={`grid gap-4 ${
+                showTerminal && showInfoPanel
+                  ? "grid-cols-1 xl:grid-cols-3"
+                  : "grid-cols-1"
+              }`}>
+                {showTerminal && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className={showInfoPanel ? "xl:col-span-2" : "col-span-full"}>
+                    <TerminalSection
+                      entries={entries}
+                      input={input}
+                      suggestions={suggestions}
+                      inputRef={inputRef}
+                      scrollRef={scrollRef}
+                      onInputChange={setInput}
+                      onSubmit={handleTerminalSubmit}
+                      onKeyDown={handleKeyDown}
+                      onSuggestionClick={handleSuggestionClick}
+                    />
+                  </motion.div>
+                )}
+
+                {showInfoPanel && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 50 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="space-y-4">
+                    <AnimatePresence mode="wait">
+                      {currentCommand && (
+                        <motion.div
+                          key="command-details"
+                          initial={{ opacity: 0, y: -20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          transition={{ duration: 0.3, ease: "easeOut" }}>
+                          <CommandDetails command={currentCommand} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    {learningProgress && (
+                      <LearningProgressCard progress={learningProgress} />
+                    )}
+                    <motion.div
+                      layout
+                      transition={{ duration: 0.3, ease: "easeOut" }}>
+                      <HelpTips />
+                    </motion.div>
+                    <GitHubButtons />
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === "learn" && (
+            <motion.div
+              key="learn-tab"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <LearningPathSection
+                completedTopics={learningProgress?.completedTopics ?? []}
+                onTryCommand={handleTryCommand}
               />
             </motion.div>
           )}
 
-          {showInfoPanel && (
+          {activeTab === "quiz" && (
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 50 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              className="space-y-4">
-              <AnimatePresence mode="wait">
-                {currentCommand && (
-                  <motion.div
-                    key="command-details"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}>
-                    <CommandDetails command={currentCommand} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              <motion.div
-                layout
-                transition={{ duration: 0.3, ease: "easeOut" }}>
-                <HelpTips />
-              </motion.div>
-              <GitHubButtons />
+              key="quiz-tab"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              <QuizMode
+                onQuizComplete={handleQuizComplete}
+                onTryCommand={handleTryCommand}
+              />
             </motion.div>
           )}
-        </div>
+        </AnimatePresence>
 
         {testimonialsLoading ? (
           <LoadingState
